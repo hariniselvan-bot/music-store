@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Player Dashboard — Stackly Music</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#d8a63c;--light-gold:#f2c45f;--cream:#f5f2ea;
+  --bg:#050504;--panel:rgba(14,11,7,.78);--line:rgba(216,166,60,.14);
+  --muted:rgba(245,242,234,.56);--green:#55c58a;--red:#e77d7d;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--cream);font-family:Inter,Arial,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-3;background:
+radial-gradient(circle at 12% 10%,rgba(216,166,60,.13),transparent 26%),
+radial-gradient(circle at 88% 72%,rgba(216,166,60,.08),transparent 30%),
+linear-gradient(135deg,#050504,#0c0904 52%,#050504)}
+body:after{content:"";position:fixed;inset:0;z-index:-2;opacity:.16;background-image:
+linear-gradient(rgba(216,166,60,.08) 1px,transparent 1px),
+linear-gradient(90deg,rgba(216,166,60,.08) 1px,transparent 1px);background-size:64px 64px;
+animation:gridMove 25s linear infinite}
+@keyframes gridMove{to{background-position:64px 64px,-64px 64px}}
+
+.app{min-height:100vh;display:flex}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:270px;padding:26px 18px;background:rgba(5,5,4,.88);border-right:1px solid var(--line);backdrop-filter:blur(22px);z-index:100;display:flex;flex-direction:column;transition:.35s ease}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--cream);padding:4px 10px 24px}
+.logo{width:52px;height:52px;border:1.5px solid var(--gold);border-radius:50%;display:grid;place-items:center;overflow:hidden;box-shadow:0 0 25px rgba(216,166,60,.12);animation:logoPulse 4s ease-in-out infinite}
+.logo img{width:78%;height:78%;object-fit:contain;filter:brightness(0)saturate(100%) invert(69%) sepia(53%) saturate(1020%) hue-rotate(359deg) brightness(97%) contrast(96%)}
+@keyframes logoPulse{50%{box-shadow:0 0 30px rgba(216,166,60,.2)}}
+.brand h1{font:700 1.35rem "Playfair Display",serif;letter-spacing:.08em;margin:0}.brand span{display:block;color:var(--gold);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;margin-top:4px}
+.profile-mini{border:1px solid var(--line);background:rgba(216,166,60,.035);border-radius:16px;padding:14px;margin:0 2px 20px;display:flex;align-items:center;gap:11px}
+.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--light-gold));color:#080706;font-weight:800}
+.profile-mini strong{display:block;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px}.profile-mini small{color:var(--muted);font-size:.7rem}
+.nav{display:flex;flex-direction:column;gap:6px}.nav button{border:0;background:transparent;color:var(--muted);padding:12px 13px;border-radius:11px;text-align:left;font:500 .86rem Inter;cursor:pointer;display:flex;align-items:center;gap:11px;transition:.25s}
+.nav button:hover,.nav button.active{color:var(--cream);background:rgba(216,166,60,.09)}.nav button.active{box-shadow:inset 3px 0 var(--gold)}.nav .icon{width:19px;text-align:center;color:var(--gold)}
+.sidebar-bottom{margin-top:auto}.logout{width:100%;border:1px solid rgba(216,166,60,.18);background:transparent;color:var(--muted);padding:11px;border-radius:10px;cursor:pointer}.logout:hover{color:var(--gold);border-color:var(--gold)}
+
+.main{margin-left:270px;width:calc(100% - 270px);min-height:100vh;padding:28px 34px 50px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:28px}
+.mobile-menu{display:none;border:1px solid var(--line);background:var(--panel);color:var(--gold);width:44px;height:44px;border-radius:11px;cursor:pointer}
+.greeting h2{font:700 clamp(1.7rem,3vw,2.6rem) "Playfair Display",serif;margin:0}.greeting p{margin:7px 0 0;color:var(--muted);font-size:.88rem}
+.top-actions{display:flex;align-items:center;gap:10px}.date-chip,.user-chip{border:1px solid var(--line);background:var(--panel);padding:10px 14px;border-radius:11px;color:var(--muted);font-size:.76rem}
+.user-chip{display:flex;align-items:center;gap:8px;color:var(--cream)}.user-chip .avatar{width:28px;height:28px;font-size:.72rem}
+
+.view{display:none;animation:viewIn .5s ease both}.view.active{display:block}
+@keyframes viewIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.section-title{display:flex;justify-content:space-between;align-items:end;margin:0 0 16px}.section-title h3{font:600 1.35rem "Playfair Display",serif;margin:0}.section-title span{color:var(--gold);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;backdrop-filter:blur(18px);transition:.3s;position:relative;overflow:hidden}
+.card:before{content:"";position:absolute;inset:-50%;background:radial-gradient(circle at 50% 0,rgba(216,166,60,.08),transparent 28%);pointer-events:none}
+.card:hover{transform:translateY(-4px);border-color:rgba(216,166,60,.32);box-shadow:0 18px 45px rgba(0,0,0,.25)}
+.stat-label{color:var(--muted);font-size:.73rem;text-transform:uppercase;letter-spacing:.1em}.stat{font-size:2rem;font-weight:700;margin:10px 0 5px}.stat-gold{color:var(--gold)}.trend{font-size:.72rem;color:var(--green)}.trend.down{color:var(--red)}
+.grid-2{display:grid;grid-template-columns:1.45fr 1fr;gap:16px;margin-top:16px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.chart{height:250px;display:flex;align-items:end;gap:10px;padding-top:25px}.bar{flex:1;border-radius:7px 7px 2px 2px;background:linear-gradient(to top,var(--gold),rgba(242,196,95,.45));height:var(--h);animation:barUp .8s cubic-bezier(.2,.8,.2,1) both;transform-origin:bottom}
+@keyframes barUp{from{height:0}to{height:var(--h)}}.bar-labels{display:flex;gap:10px;color:var(--muted);font-size:.65rem}.bar-labels span{flex:1;text-align:center}
+.list{display:flex;flex-direction:column;gap:10px}.row{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid rgba(216,166,60,.08);border-radius:12px;background:rgba(255,255,255,.015)}.row-main{flex:1}.row strong{display:block;font-size:.83rem}.row small{color:var(--muted);font-size:.7rem}.badge{font-size:.65rem;padding:5px 8px;border-radius:20px;background:rgba(216,166,60,.09);color:var(--gold)}.badge.green{color:var(--green);background:rgba(85,197,138,.08)}
+.table-wrap{overflow:auto}.data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{text-align:left;padding:14px 10px;border-bottom:1px solid rgba(216,166,60,.08);font-size:.78rem}.data-table th{color:var(--gold);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em}.data-table td{color:var(--muted)}
+.profile-panel{display:grid;grid-template-columns:1fr 1fr;gap:16px}.profile-big{display:flex;align-items:center;gap:15px}.avatar.big{width:76px;height:76px;font-size:1.5rem}.detail{padding:13px 0;border-bottom:1px solid rgba(216,166,60,.08)}.detail label{display:block;color:var(--gold);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}.detail span{color:var(--muted);font-size:.84rem}
+.empty-note{color:var(--muted);font-size:.85rem;padding:30px 0}.action{border:1px solid var(--gold);background:rgba(216,166,60,.08);color:var(--gold);border-radius:9px;padding:9px 13px;cursor:pointer}.action:hover{background:var(--gold);color:#080706}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:90}.overlay.open{display:block}
+
+@media(max-width:1050px){.cards{grid-template-columns:repeat(2,1fr)}.grid-2,.profile-panel{grid-template-columns:1fr}}
+@media(max-width:800px){
+.sidebar{transform:translateX(-105%);width:285px}.sidebar.open{transform:none}.main{margin-left:0;width:100%;padding:20px 16px 40px}.mobile-menu{display:block}.topbar{align-items:flex-start}.date-chip{display:none}.top-actions{margin-left:auto}.user-chip span{display:none}.cards{grid-template-columns:1fr 1fr}.overlay.open{display:block}
+}
+@media(max-width:540px){.cards{grid-template-columns:1fr}.topbar{gap:10px}.greeting h2{font-size:1.55rem}.card{padding:16px}.grid-3{grid-template-columns:1fr}.data-table th:nth-child(3),.data-table td:nth-child(3){display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">
+    <div class="logo"><img src="assets/logo.webp" alt="Stackly Music"></div>
+    <div><h1>STACKLY</h1><span>Feel The Music</span></div>
+  </a>
+  <div class="profile-mini">
+    <div class="avatar" id="sideAvatar">H</div>
+    <div><strong id="sideName">Harini</strong><small id="sideEmail">harini@gmail.com</small></div>
+  </div>
+  <nav class="nav" id="nav">
+    <button class="active" data-view="overview"><span class="icon">⌂</span>Overview</button>
+    <button data-view="performances"><span class="icon">♪</span>Performances</button>
+    <button data-view="repertoire"><span class="icon">♫</span>Repertoire</button>
+    <button data-view="analytics"><span class="icon">◒</span>Analytics</button>
+    <button data-view="bookings"><span class="icon">▣</span>Bookings</button>
+    <button data-view="messages"><span class="icon">✉</span>Messages</button>
+    <button data-view="profile"><span class="icon">◉</span>Profile</button>
+  </nav>
+  <div class="sidebar-bottom"><button class="logout" id="logout">↪ Sign out</button></div>
+</aside>
+<div class="overlay" id="overlay"></div>
+
+<main class="main">
+  <header class="topbar">
+    <button class="mobile-menu" id="menuBtn" aria-label="Open menu">☰</button>
+    <div class="greeting"><h2 id="greeting">Good evening, Harini</h2><p>Your player workspace at a glance.</p></div>
+    <div class="top-actions"><div class="date-chip">14 AUG 2026</div><div class="user-chip"><div class="avatar" id="topAvatar">H</div><span id="topName">Harini</span></div></div>
+  </header>
+
+  <!-- OVERVIEW -->
+  <section class="view active" id="overview">
+    <div class="section-title"><h3>Performance Overview</h3><span>Live workspace</span></div>
+    <div class="cards">
+      <div class="card"><div class="stat-label">Performances</div><div class="stat">28</div><div class="trend">↑ 12% this month</div></div>
+      <div class="card"><div class="stat-label">Listeners Reached</div><div class="stat">18.6K</div><div class="trend">↑ 18.4% this month</div></div>
+      <div class="card"><div class="stat-label">Saved Repertoire</div><div class="stat">46</div><div class="trend">+5 new pieces</div></div>
+      <div class="card"><div class="stat-label">Upcoming</div><div class="stat">04</div><div class="trend">Next: Aug 18</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title"><h3>Audience Growth</h3><span>Last 7 months</span></div>
+        <div class="chart">
+          <i class="bar" style="--h:38%"></i><i class="bar" style="--h:48%"></i><i class="bar" style="--h:44%"></i><i class="bar" style="--h:62%"></i><i class="bar" style="--h:70%"></i><i class="bar" style="--h:83%"></i><i class="bar" style="--h:94%"></i>
+        </div>
+        <div class="bar-labels"><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span></div>
+      </div>
+      <div class="card"><div class="section-title"><h3>Upcoming</h3><span>4 events</span></div><div class="list" id="upcomingList"></div></div>
+    </div>
+    <div class="grid-3">
+      <div class="card"><div class="section-title"><h3>Top Track</h3></div><div class="profile-big"><div class="avatar">♪</div><div><strong>Midnight Strings</strong><small style="display:block;color:var(--muted);margin-top:4px">6,842 plays</small></div></div></div>
+      <div class="card"><div class="section-title"><h3>Fan Rating</h3></div><div class="stat stat-gold">4.9/5</div><div class="trend">Based on 284 reviews</div></div>
+      <div class="card"><div class="section-title"><h3>Messages</h3></div><div class="stat">07</div><div class="trend">3 need a reply</div></div>
+    </div>
+  </section>
+
+  <!-- PERFORMANCES -->
+  <section class="view" id="performances">
+    <div class="section-title"><h3>Performances</h3><button class="action">+ Add Performance</button></div>
+    <div class="card table-wrap"><table class="data-table"><thead><tr><th>Performance</th><th>Venue</th><th>Date</th><th>Audience</th><th>Status</th></tr></thead><tbody id="performanceRows"></tbody></table></div>
+  </section>
+
+  <!-- REPERTOIRE -->
+  <section class="view" id="repertoire">
+    <div class="section-title"><h3>My Repertoire</h3><button class="action">+ Add Piece</button></div>
+    <div class="cards" id="repertoireCards"></div>
+  </section>
+
+  <!-- ANALYTICS -->
+  <section class="view" id="analytics">
+    <div class="section-title"><h3>Analytics</h3><span>Player statistics</span></div>
+    <div class="cards">
+      <div class="card"><div class="stat-label">Monthly Plays</div><div class="stat">42.8K</div><div class="trend">↑ 21.6%</div></div>
+      <div class="card"><div class="stat-label">Profile Visits</div><div class="stat">8,420</div><div class="trend">↑ 14.2%</div></div>
+      <div class="card"><div class="stat-label">New Followers</div><div class="stat">1,284</div><div class="trend">↑ 9.8%</div></div>
+      <div class="card"><div class="stat-label">Engagement</div><div class="stat">72.4%</div><div class="trend">↑ 5.4%</div></div>
+    </div>
+    <div class="grid-2"><div class="card"><div class="section-title"><h3>Weekly Plays</h3></div><div class="chart"><i class="bar" style="--h:46%"></i><i class="bar" style="--h:68%"></i><i class="bar" style="--h:53%"></i><i class="bar" style="--h:80%"></i><i class="bar" style="--h:64%"></i><i class="bar" style="--h:91%"></i><i class="bar" style="--h:78%"></i></div><div class="bar-labels"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div><div class="card"><div class="section-title"><h3>Audience Mix</h3></div><div class="list"><div class="row"><div class="row-main"><strong>India</strong><small>46% of listeners</small></div><span class="badge">46%</span></div><div class="row"><div class="row-main"><strong>United States</strong><small>22% of listeners</small></div><span class="badge">22%</span></div><div class="row"><div class="row-main"><strong>United Kingdom</strong><small>14% of listeners</small></div><span class="badge">14%</span></div></div></div></div>
+  </section>
+
+  <!-- BOOKINGS -->
+  <section class="view" id="bookings">
+    <div class="section-title"><h3>Bookings</h3><button class="action">+ New Booking</button></div>
+    <div class="card table-wrap"><table class="data-table"><thead><tr><th>Client</th><th>Event</th><th>Date</th><th>Fee</th><th>Status</th></tr></thead><tbody id="bookingRows"></tbody></table></div>
+  </section>
+
+  <!-- MESSAGES -->
+  <section class="view" id="messages">
+    <div class="section-title"><h3>Messages</h3><span>7 conversations</span></div>
+    <div class="card"><div class="list" id="messageList"></div></div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="view" id="profile">
+    <div class="section-title"><h3>Profile</h3><button class="action">Edit Profile</button></div>
+    <div class="profile-panel">
+      <div class="card"><div class="profile-big"><div class="avatar big" id="profileAvatar">H</div><div><h3 id="profileName" style="margin:0 0 5px">Harini</h3><span style="color:var(--gold)">PLAYER</span></div></div><div class="detail"><label>Email</label><span id="profileEmail">harini@gmail.com</span></div><div class="detail"><label>Specialty</label><span>Guitar · Acoustic & Electric</span></div><div class="detail"><label>Location</label><span>Chennai, India</span></div></div>
+      <div class="card"><div class="section-title"><h3>Player Details</h3></div><div class="detail"><label>Experience</label><span>8 years</span></div><div class="detail"><label>Genre</label><span>Indie · Acoustic · Soul</span></div><div class="detail"><label>Availability</label><span style="color:var(--green)">Available for bookings</span></div><div class="detail"><label>Member Since</label><span>March 2024</span></div></div>
+    </div>
+  </section>
+</main>
+</div>
+
+<script>
+/* ==========================================================
+   SINGLE-FILE PLAYER DATA
+   All dashboard data lives here. No JSON/API/data files needed.
+   ========================================================== */
+const PLAYER_DATA={
+  performances:[
+    {name:"Golden Hour Live",venue:"The Music Room",date:"18 Aug 2026",audience:"420",status:"Confirmed"},
+    {name:"Acoustic Nights",venue:"The Courtyard",date:"24 Aug 2026",audience:"280",status:"Confirmed"},
+    {name:"Indie Sessions",venue:"Studio 7",date:"02 Sep 2026",audience:"190",status:"Pending"},
+    {name:"Sound & Soul",venue:"Bay Stage",date:"12 Sep 2026",audience:"650",status:"Confirmed"}
+  ],
+  repertoire:[
+    {title:"Midnight Strings",type:"Original",plays:"6,842",genre:"Indie Soul"},
+    {title:"Golden Hour",type:"Cover",plays:"5,204",genre:"Acoustic"},
+    {title:"After Rain",type:"Original",plays:"4,891",genre:"Ambient"},
+    {title:"City Lights",type:"Original",plays:"3,746",genre:"Indie"},
+    {title:"Blue Room",type:"Cover",plays:"3,205",genre:"Jazz"},
+    {title:"Slow Motion",type:"Original",plays:"2,981",genre:"Soul"}
+  ],
+  bookings:[
+    {client:"Aria Events",event:"Corporate Evening",date:"18 Aug 2026",fee:"₹28,000",status:"Confirmed"},
+    {client:"The Courtyard",event:"Acoustic Night",date:"24 Aug 2026",fee:"₹18,500",status:"Confirmed"},
+    {client:"Studio 7",event:"Recording Session",date:"02 Sep 2026",fee:"₹12,000",status:"Pending"},
+    {client:"Bay Stage",event:"Sound & Soul",date:"12 Sep 2026",fee:"₹35,000",status:"Confirmed"}
+  ],
+  messages:[
+    {name:"Aria Events",text:"Can we confirm the set list for Aug 18?",time:"8 min ago",unread:true},
+    {name:"The Music Room",text:"Your soundcheck is scheduled for 5:30 PM.",time:"42 min ago",unread:true},
+    {name:"Studio 7",text:"The recording room is ready for your session.",time:"2 hr ago",unread:true},
+    {name:"Maya Productions",text:"Loved your latest performance. Let's collaborate.",time:"Yesterday",unread:false},
+    {name:"The Courtyard",text:"Thanks for confirming your availability.",time:"Yesterday",unread:false}
+  ],
+  upcoming:[
+    {name:"Golden Hour Live",date:"18 Aug",venue:"The Music Room"},
+    {name:"Acoustic Nights",date:"24 Aug",venue:"The Courtyard"},
+    {name:"Indie Sessions",date:"02 Sep",venue:"Studio 7"},
+    {name:"Sound & Soul",date:"12 Sep",venue:"Bay Stage"}
+  ]
+};
+
+function getStoredUser(){
+  const email=localStorage.getItem("stacklyUserEmail") || "harini@gmail.com";
+  const raw=localStorage.getItem("stacklyUserName");
+  const name=raw || email.split("@")[0].replace(/[._-]+/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+  return {email,name};
+}
+function initials(name){return name.split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase()}
+function applyUser(){
+  const user=getStoredUser(), init=initials(user.name);
+  ["sideName","topName","profileName","greeting"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=id==="greeting" ? `Good evening, ${user.name}` : user.name;
+  });
+  ["sideEmail","profileEmail"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=user.email});
+  ["sideAvatar","topAvatar","profileAvatar"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=init});
+}
+function render(){
+  document.getElementById("upcomingList").innerHTML=PLAYER_DATA.upcoming.map(x=>`
+    <div class="row"><div class="row-main"><strong>${x.name}</strong><small>${x.venue}</small></div><span class="badge">${x.date}</span></div>`).join("");
+  document.getElementById("performanceRows").innerHTML=PLAYER_DATA.performances.map(x=>`
+    <tr><td>${x.name}</td><td>${x.venue}</td><td>${x.date}</td><td>${x.audience}</td><td><span class="badge green">${x.status}</span></td></tr>`).join("");
+  document.getElementById("bookingRows").innerHTML=PLAYER_DATA.bookings.map(x=>`
+    <tr><td>${x.client}</td><td>${x.event}</td><td>${x.date}</td><td>${x.fee}</td><td><span class="badge ${x.status==="Confirmed"?"green":""}">${x.status}</span></td></tr>`).join("");
+  document.getElementById("repertoireCards").innerHTML=PLAYER_DATA.repertoire.map(x=>`
+    <div class="card"><div class="stat-label">${x.type}</div><div style="font:600 1.25rem 'Playfair Display',serif;margin:10px 0 7px">${x.title}</div><div style="color:var(--muted);font-size:.75rem">${x.genre}</div><div style="margin-top:18px;color:var(--gold);font-size:.78rem">${x.plays} plays</div></div>`).join("");
+  document.getElementById("messageList").innerHTML=PLAYER_DATA.messages.map(x=>`
+    <div class="row"><div class="avatar">${initials(x.name)}</div><div class="row-main"><strong>${x.name} ${x.unread?'<span style="color:var(--gold)">•</span>':''}</strong><small>${x.text}</small></div><span class="badge">${x.time}</span></div>`).join("");
+}
+function openView(view){
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===view));
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("overlay").classList.remove("open");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".nav button").forEach(btn=>btn.addEventListener("click",()=>openView(btn.dataset.view)));
+document.getElementById("menuBtn").addEventListener("click",()=>{document.getElementById("sidebar").classList.add("open");document.getElementById("overlay").classList.add("open")});
+document.getElementById("overlay").addEventListener("click",()=>{document.getElementById("sidebar").classList.remove("open");document.getElementById("overlay").classList.remove("open")});
+document.getElementById("logout").addEventListener("click",()=>{
+  localStorage.removeItem("stacklyUserEmail");
+  localStorage.removeItem("stacklyUserName");
+  window.location.href="login.html";
+});
+applyUser();render();
+</script>
+</body>
+</html>

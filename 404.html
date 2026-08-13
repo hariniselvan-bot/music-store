@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — The Sound Disappeared</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .error-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; padding: 2rem; }
+    .error-code { font-size: clamp(6rem, 15vw, 12rem); font-family: var(--font-serif); font-weight: 700; line-height: 1; background: linear-gradient(135deg, var(--gold), var(--light-gold), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem; animation: pulse 3s infinite ease-in-out; }
+    @keyframes pulse { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
+    .error-page h1 { font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom: 1rem; color: var(--white); }
+    .error-page p { color: rgba(245,242,234,0.5); font-size: 1rem; max-width: 400px; margin-bottom: 2.5rem; line-height: 1.7; }
+    .error-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .floating-notes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .note { position: absolute; color: var(--gold); font-size: 2rem; opacity: 0.15; animation: floatNote 10s infinite linear; }
+    @keyframes floatNote { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.15; } 90% { opacity: 0.15; } 100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; } }
+    .waveform-404 { position: absolute; bottom: 0; left: 0; right: 0; height: 150px; opacity: 0.2; }
+  </style>
+</head>
+<body class="bg-home">
+  <div class="floating-notes">
+    <div class="note" style="left:10%; animation-delay:0s;">&#9836;</div>
+    <div class="note" style="left:25%; animation-delay:2s;">&#9833;</div>
+    <div class="note" style="left:40%; animation-delay:4s;">&#9834;</div>
+    <div class="note" style="left:55%; animation-delay:1s;">&#9835;</div>
+    <div class="note" style="left:70%; animation-delay:3s;">&#9837;</div>
+    <div class="note" style="left:85%; animation-delay:5s;">&#9836;</div>
+  </div>
+  <div class="error-page">
+    <div class="error-code">404</div>
+    <h1>The Sound Disappeared</h1>
+    <p>The page you're looking for seems to have gone silent. It might have been moved, deleted, or never existed in our repertoire.</p>
+    <div class="error-buttons">
+      <button onclick="history.back()" class="btn-outline">Go Back</button>
+      <a href="index.html" class="btn-gold">Home</a>
+    </div>
+  </div>
+  <div class="waveform-404">
+    <svg viewBox="0 0 1440 150" preserveAspectRatio="none">
+      <path d="M0,75 C180,25 360,125 540,75 C720,25 900,125 1080,75 C1260,25 1350,100 1440,75" stroke="var(--gold)" stroke-width="2" fill="none"/>
+      <path d="M0,100 C240,50 480,150 720,100 C960,50 1200,150 1440,100" stroke="var(--purple)" stroke-width="1.5" fill="none" opacity="0.5"/>
+    </svg>
+  </div>
+  <script src="js/main.js"></script>
+</body>
+</html>

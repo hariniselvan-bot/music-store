@@ -1,0 +1,4289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUSICA — Feel The Music | Premium Musical Instruments</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+<style id="stackly-instrument-theme">
+/* Instrument-specific hero backgrounds + clean SVG icons */
+.hero-section{
+  --hero-bg-image:url("assets/hero-guitar-bg.webp");
+  position:relative;
+  isolation:isolate;
+  background:
+    linear-gradient(90deg, rgba(5,5,8,.78) 0%, rgba(5,5,8,.45) 48%, rgba(5,5,8,.22) 100%),
+    var(--hero-bg-image);
+  background-size:cover;
+  background-position:center;
+  transition:background-image .65s ease, background-color .65s ease;
+}
+.hero-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 74% 36%, rgba(216,166,60,.18), transparent 34%),
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.55));
+}
+.hero-section.instrument-guitar{
+  --hero-bg-image:url("assets/hero-guitar-bg.webp");
+}
+.hero-section.instrument-piano{
+  --hero-bg-image:url("assets/hero-piano-bg.webp");
+}
+.hero-section.instrument-drums{
+  --hero-bg-image:url("assets/hero-drums-bg.webp");
+}
+
+.instrument-card-icon{
+  width:42px;
+  height:42px;
+  border:1px solid currentColor;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  flex:0 0 42px;
+  background:rgba(0,0,0,.22);
+  box-shadow:0 0 22px rgba(216,166,60,.08);
+}
+.instrument-svg-icon{
+  width:23px;
+  height:23px;
+  display:block;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.instrument-svg-icon .piano-key-black{
+  fill:currentColor;
+  stroke:none;
+}
+.instrument-card[data-instrument="guitar"] .instrument-card-icon{ color:#d8a63c; }
+.instrument-card[data-instrument="piano"] .instrument-card-icon{ color:#a99be8; }
+.instrument-card[data-instrument="drums"] .instrument-card-icon{ color:#a45be6; }
+
+.instrument-card.active{
+  box-shadow:inset 0 0 0 1px rgba(192, 163, 102, 0.65), 0 12px 45px rgba(0,0,0,.28);
+}
+.instrument-card.active .instrument-card-icon{
+  box-shadow:0 0 28px currentColor;
+}
+.hero-main-image{
+  transition:opacity .45s ease, transform .6s ease;
+}
+
+/* ===== SUBTLE CROSS-GRID HERO ===== */
+.hero-section{
+  --grid-color:#d8a63c;
+  --grid-rgb:216,166,60;
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+}
+
+/* Keep the original hero/photo strong. The grid is only a light texture. */
+.hero-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 72% 35%, rgba(var(--grid-rgb),.12), transparent 34%),
+    linear-gradient(90deg, rgba(var(--grid-rgb),.035), transparent 55%);
+  transition:background 650ms ease;
+}
+
+.hero-section.instrument-guitar{
+  --grid-color:#d8a63c;
+  --grid-rgb:216,166,60;
+}
+
+.hero-section.instrument-piano{
+  --grid-color:#315b91;
+  --grid-rgb:49,91,145;
+}
+
+.hero-section.instrument-drums{
+  --grid-color:#b65ce8;
+  --grid-rgb:182,92,232;
+}
+
+/* Full-hero grid, but intentionally low contrast */
+.hero-cross-grid{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  overflow:hidden;
+  opacity:.20;
+}
+
+.hero-cross-grid::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 44% 48% at 56% 48%,
+      rgba(0,0,0,.95) 0%,
+      rgba(0,0,0,.72) 42%,
+      rgba(0,0,0,.10) 72%,
+      transparent 100%);
+  z-index:2;
+  pointer-events:none;
+}
+
+.hero-cross-grid svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.hero-cross-grid .grid-line{
+  stroke:var(--grid-color);
+  fill:none;
+  vector-effect:non-scaling-stroke;
+}
+
+.hero-cross-grid .grid-line.main{
+  stroke-width:1;
+  opacity:.30;
+}
+
+.hero-cross-grid .grid-cross{
+  stroke:var(--grid-color);
+  stroke-width:1.4;
+  stroke-linecap:round;
+  opacity:.55;
+  fill:none;
+  vector-effect:non-scaling-stroke;
+}
+
+.hero-cross-grid .grid-cross-glow{
+  display:none;
+}
+
+.hero-cross-grid .grid-pulse{
+  animation:gridPulse 5s ease-in-out infinite;
+}
+
+.hero-cross-grid .grid-move{
+  animation:gridDrift 24s ease-in-out infinite;
+  transform-box:fill-box;
+  transform-origin:center;
+}
+
+.hero-cross-grid .grid-sweep{
+  fill:url(#gridSweep);
+  opacity:.08;
+  animation:gridSweep 12s ease-in-out infinite;
+}
+
+@keyframes gridDrift{
+  0%,100%{transform:translate3d(0,0,0);}
+  50%{transform:translate3d(8px,-5px,0);}
+}
+
+@keyframes gridPulse{
+  0%,100%{opacity:.72;}
+  50%{opacity:1;}
+}
+
+@keyframes gridSweep{
+  0%{transform:translateX(-60%);}
+  50%{transform:translateX(10%);}
+  100%{transform:translateX(120%);}
+}
+
+/* Content is always above the decorative grid */
+.hero-section > .container{
+  position:relative;
+  z-index:5 !important;
+}
+
+.hero-section > .hero-image-container{
+  z-index:4;
+}
+
+.hero-section > .scroll-indicator,
+.hero-section > .waveform{
+  z-index:6;
+}
+
+/* Make typography crisp against both the grid and photography */
+.hero-content,
+.hero-content h1,
+.hero-content p,
+.hero-content .section-label,
+.hero-content .hero-feature{
+  text-shadow:0 2px 14px rgba(0,0,0,.55);
+}
+
+.hero-title{
+  position:relative;
+  z-index:7;
+}
+
+@media (max-width:900px){
+  .hero-cross-grid{
+    opacity:.14;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .hero-cross-grid .grid-move,
+  .hero-cross-grid .grid-pulse,
+  .hero-cross-grid .grid-sweep{
+    animation:none;
+  }
+}
+</style>
+
+
+<style id="hero-right-image-only-fix">
+/* RIGHT HERO IMAGE — lower it without touching the background/grid/content */
+.hero-section > .hero-image-container{
+  position:absolute !important;
+  top:50% !important;
+  right:0 !important;
+  bottom:auto !important;
+  left:50% !important;
+  width:auto !important;
+  height:86% !important;
+  transform:translateY(-50%) !important;
+  z-index:3 !important;
+  overflow:hidden !important;
+  pointer-events:none !important;
+  display:block !important;
+}
+
+/* Keep the image lower and show more of its middle/lower area */
+.hero-section > .hero-image-container .hero-main-image{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  object-fit:cover !important;
+  object-position:center 58% !important;
+  opacity:.68 !important;
+  filter:brightness(1.22) contrast(.88) saturate(.90) !important;
+  transform:none !important;
+}
+
+/* Soft left edge so the hero words can overlay naturally */
+.hero-section > .hero-image-container::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(
+    90deg,
+    rgba(5,5,8,.92) 0%,
+    rgba(5,5,8,.52) 12%,
+    rgba(5,5,8,.12) 30%,
+    rgba(5,5,8,0) 48%
+  );
+}
+
+/* Keep all existing content above the image */
+.hero-section > .container{
+  position:relative !important;
+  z-index:7 !important;
+}
+.hero-section .hero-content{
+  position:relative !important;
+  z-index:10 !important;
+}
+.hero-section .hero-title,
+.hero-section .hero-description,
+.hero-section .section-label,
+.hero-section .hero-features,
+.hero-section .btn-gold{
+  position:relative !important;
+  z-index:11 !important;
+}
+.hero-section .instrument-selector{
+  position:relative !important;
+  z-index:12 !important;
+}
+
+/* Do NOT alter the existing background or grid */
+.hero-section{
+  background-color:transparent;
+}
+
+@media (max-width:900px){
+  .hero-section > .hero-image-container{
+    top:50% !important;
+    right:0 !important;
+    bottom:auto !important;
+    left:30% !important;
+    height:78% !important;
+    transform:translateY(-50%) !important;
+  }
+  .hero-section > .hero-image-container .hero-main-image{
+    opacity:.48 !important;
+    object-position:center 58% !important;
+  }
+}
+</style>
+
+
+<style id="hero-final-layout">
+/* =========================================================
+   FINAL HERO — MATCH THE REFERENCE LAYOUT
+   Keeps the existing content/cards, but places the guitar
+   as a complete foreground image on the RIGHT + CENTER.
+   ========================================================= */
+
+.hero-section{
+  min-height:100vh !important;
+  height:100vh !important;
+  overflow:hidden !important;
+  position:relative !important;
+
+  /* dark grid atmosphere like the reference */
+  background-color:#070708 !important;
+  background-image:
+    radial-gradient(circle at 72% 48%, rgba(216,166,60,.16), transparent 30%),
+    linear-gradient(90deg, rgba(216,166,60,.045) 1px, transparent 1px),
+    linear-gradient(rgba(216,166,60,.045) 1px, transparent 1px) !important;
+  background-size:auto,52px 52px,52px 52px !important;
+  background-position:center !important;
+}
+
+/* Remove the old photographic hero background from the layer.
+   The guitar.jpg below becomes the ONLY large guitar image. */
+.hero-section::before{
+  background:
+    radial-gradient(circle at 72% 48%, rgba(216,166,60,.13), transparent 30%),
+    linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.42)) !important;
+}
+
+/* Main content: selector LEFT, text CENTER */
+.hero-section > .container{
+  width:min(1510px, calc(100% - 90px)) !important;
+  max-width:1510px !important;
+  height:100% !important;
+  margin:0 auto !important;
+  display:flex !important;
+  align-items:center !important;
+  position:relative !important;
+  z-index:20 !important;
+}
+
+.hero-section .hero-grid{
+  width:100% !important;
+  display:grid !important;
+  grid-template-columns:390px minmax(480px,560px) !important;
+  gap:80px !important;
+  align-items:center !important;
+  margin-top:35px !important;
+}
+
+/* LEFT CARDS — same stacked look as reference */
+.hero-section .instrument-selector{
+  width:390px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:24px !important;
+  position:relative !important;
+  z-index:30 !important;
+}
+
+.hero-section .instrument-card{
+  width:390px !important;
+  height:195px !important;
+  min-height:195px !important;
+  border-radius:20px !important;
+  overflow:hidden !important;
+  position:relative !important;
+  border:1px solid rgba(216,166,60,.18) !important;
+  background:#09090c !important;
+}
+
+.hero-section .instrument-card.active{
+  border-color:rgba(216,166,60,.9) !important;
+  box-shadow:0 0 35px rgba(216,166,60,.10),
+             inset 0 0 0 1px rgba(216,166,60,.35) !important;
+}
+
+.hero-section .instrument-card > img{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  opacity:.72 !important;
+}
+
+.hero-section .instrument-card::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  background:linear-gradient(90deg,
+    rgba(0,0,0,.75),
+    rgba(0,0,0,.15) 60%,
+    rgba(0,0,0,.38)) !important;
+  pointer-events:none !important;
+}
+
+.hero-section .instrument-card-content{
+  position:absolute !important;
+  inset:0 !important;
+  z-index:3 !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:18px !important;
+  padding:28px !important;
+}
+
+/* CENTER TEXT */
+.hero-section .hero-content{
+  width:100% !important;
+  max-width:560px !important;
+  position:relative !important;
+  z-index:40 !important;
+  margin:0 !important;
+}
+
+.hero-section .section-label{
+  margin-bottom:24px !important;
+}
+
+.hero-section .hero-title{
+  margin:0 0 24px !important;
+  font-size:clamp(4.5rem,6vw,6.8rem) !important;
+  line-height:.88 !important;
+  letter-spacing:-.055em !important;
+}
+
+.hero-section .hero-title .line-1,
+.hero-section .hero-title .line-2{
+  display:block !important;
+}
+
+.hero-section .hero-description{
+  max-width:510px !important;
+  font-size:18px !important;
+  line-height:1.7 !important;
+  margin-bottom:34px !important;
+}
+
+.hero-section .hero-features{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:18px 34px !important;
+  margin-bottom:38px !important;
+}
+
+.hero-section .hero-feature{
+  display:flex !important;
+  align-items:center !important;
+  gap:12px !important;
+}
+
+/* RIGHT GUITAR — IMPORTANT: contain, not cover */
+.hero-section > .hero-image-container{
+  position:absolute !important;
+  top:50% !important;
+  right:4% !important;
+  left:auto !important;
+  bottom:auto !important;
+
+  width:43% !important;
+  max-width:690px !important;
+  height:88% !important;
+
+  transform:translateY(-50%) !important;
+  z-index:8 !important;
+  overflow:visible !important;
+  pointer-events:none !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* Show the COMPLETE guitar image.
+   This is what fixes the "too high / cropped" problem. */
+.hero-section > .hero-image-container .hero-main-image{
+  position:relative !important;
+  inset:auto !important;
+
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+
+  object-fit:contain !important;
+  object-position:center center !important;
+
+  opacity:1 !important;
+  filter:brightness(1.05) contrast(1.03) saturate(.82) !important;
+  transform:none !important;
+}
+
+/* Gentle fade where the guitar overlaps the text */
+.hero-section > .hero-image-container::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  background:linear-gradient(90deg,
+    rgba(7,7,8,.95) 0%,
+    rgba(7,7,8,.38) 14%,
+    rgba(7,7,8,0) 35%) !important;
+  pointer-events:none !important;
+}
+
+/* Keep foreground text above the guitar */
+.hero-section .hero-content,
+.hero-section .hero-content *,
+.hero-section .instrument-selector{
+  position:relative !important;
+  z-index:30 !important;
+}
+
+/* Grid remains behind everything */
+.hero-section .hero-cross-grid{
+  z-index:2 !important;
+  opacity:.32 !important;
+}
+
+/* Reference-like desktop spacing */
+@media (min-width:1400px){
+  .hero-section .hero-grid{
+    grid-template-columns:390px 560px !important;
+    gap:80px !important;
+  }
+
+  .hero-section > .hero-image-container{
+    right:4% !important;
+    width:44% !important;
+    height:90% !important;
+  }
+}
+
+/* Tablet */
+@media (max-width:1100px){
+  .hero-section > .container{
+    width:calc(100% - 50px) !important;
+  }
+
+  .hero-section .hero-grid{
+    grid-template-columns:320px minmax(390px,1fr) !important;
+    gap:40px !important;
+  }
+
+  .hero-section .instrument-selector,
+  .hero-section .instrument-card{
+    width:320px !important;
+  }
+
+  .hero-section .instrument-card{
+    height:155px !important;
+    min-height:155px !important;
+  }
+
+  .hero-section .hero-title{
+    font-size:clamp(3.7rem,6vw,5.3rem) !important;
+  }
+
+  .hero-section > .hero-image-container{
+    right:0 !important;
+    width:46% !important;
+    height:78% !important;
+  }
+}
+
+/* Mobile */
+@media (max-width:900px){
+  .hero-section{
+    height:auto !important;
+    min-height:100vh !important;
+    padding:120px 0 70px !important;
+  }
+
+  .hero-section > .container{
+    height:auto !important;
+    width:calc(100% - 36px) !important;
+  }
+
+  .hero-section .hero-grid{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:35px !important;
+    align-items:stretch !important;
+    margin-top:0 !important;
+  }
+
+  .hero-section .instrument-selector{
+    width:100% !important;
+    order:2 !important;
+  }
+
+  .hero-section .instrument-card{
+    width:100% !important;
+    height:150px !important;
+    min-height:150px !important;
+  }
+
+  .hero-section .hero-content{
+    order:1 !important;
+    max-width:100% !important;
+  }
+
+  .hero-section .hero-title{
+    font-size:clamp(3.4rem,14vw,5rem) !important;
+  }
+
+  .hero-section .hero-description{
+    font-size:16px !important;
+  }
+
+  .hero-section .hero-features{
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  .hero-section > .hero-image-container{
+    top:430px !important;
+    right:0 !important;
+    width:100% !important;
+    height:440px !important;
+    transform:none !important;
+    opacity:.30 !important;
+    z-index:5 !important;
+  }
+}
+</style>
+
+
+<style id="stackly-final-instrument-colors">
+/* =========================================================
+   STACKLY FINAL COLORS
+   Guitar = GOLD | Piano = NAVY BLUE | Drums = PURPLE
+   ========================================================= */
+
+.stackly-gold-logo{
+  /* Converts the blue logo artwork to a warm Stackly gold. */
+  filter:
+    brightness(0)
+    saturate(100%)
+    invert(69%)
+    sepia(76%)
+    saturate(950%)
+    hue-rotate(357deg)
+    brightness(104%)
+    contrast(103%) !important;
+}
+
+/* Dynamic hero variables */
+.hero-section{
+  --instrument-color:#d8a63c;
+  --instrument-rgb:216,166,60;
+}
+
+/* GUITAR — GOLD */
+.hero-section.instrument-guitar{
+  --instrument-color:#d8a63c;
+  --instrument-rgb:216,166,60;
+}
+
+/* PIANO — NAVY BLUE */
+.hero-section.instrument-piano{
+  --instrument-color:#315b91;
+  --instrument-rgb:49,91,145;
+}
+
+/* DRUMS — PURPLE */
+.hero-section.instrument-drums{
+  --instrument-color:#a45be6;
+  --instrument-rgb:164,91,230;
+}
+
+/* Hero atmosphere follows selected instrument */
+.hero-section::before{
+  background:
+    radial-gradient(
+      circle at 72% 48%,
+      rgba(var(--instrument-rgb),.18),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.05),
+      rgba(0,0,0,.42)
+    ) !important;
+  transition:background .65s ease !important;
+}
+
+/* Grid follows selected instrument */
+.hero-section{
+  background-image:
+    radial-gradient(
+      circle at 72% 48%,
+      rgba(var(--instrument-rgb),.16),
+      transparent 30%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(var(--instrument-rgb),.045) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      rgba(var(--instrument-rgb),.045) 1px,
+      transparent 1px
+    ) !important;
+  transition:background-image .65s ease !important;
+}
+
+/* Active card border + glow */
+.hero-section .instrument-card.active{
+  border-color:var(--instrument-color) !important;
+  box-shadow:
+    0 0 35px rgba(var(--instrument-rgb),.16),
+    inset 0 0 0 1px rgba(var(--instrument-rgb),.30) !important;
+  transition:border-color .5s ease, box-shadow .5s ease !important;
+}
+
+/* Active card icon */
+.hero-section .instrument-card.active .instrument-card-icon{
+  color:var(--instrument-color) !important;
+  border-color:var(--instrument-color) !important;
+  box-shadow:0 0 28px rgba(var(--instrument-rgb),.38) !important;
+  transition:color .5s ease, border-color .5s ease, box-shadow .5s ease !important;
+}
+
+/* Selected instrument label */
+.hero-section .section-label{
+  color:var(--instrument-color) !important;
+  transition:color .5s ease !important;
+}
+
+/* Feature icons */
+.hero-section .hero-feature-icon{
+  color:var(--instrument-color) !important;
+  border-color:rgba(var(--instrument-rgb),.48) !important;
+  transition:color .5s ease, border-color .5s ease !important;
+}
+
+/* Gold/blue/purple title accent */
+.hero-section .hero-title .line-2{
+  background:linear-gradient(
+    135deg,
+    var(--instrument-color),
+    #f4d27a
+  ) !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  background-clip:text !important;
+  transition:background .5s ease !important;
+}
+
+/* Main CTA follows selected instrument */
+.hero-section .btn-gold{
+  background:var(--instrument-color) !important;
+  box-shadow:0 12px 30px rgba(var(--instrument-rgb),.22) !important;
+  transition:background .5s ease, box-shadow .5s ease !important;
+}
+
+/* Keep the actual card icon colors aligned with the theme */
+.hero-section.instrument-guitar .instrument-card-icon{
+  color:#d8a63c !important;
+}
+.hero-section.instrument-piano .instrument-card-icon{
+  color:#315b91 !important;
+}
+.hero-section.instrument-drums .instrument-card-icon{
+  color:#a45be6 !important;
+}
+</style>
+
+
+<style id="instrument-showcase-svg">
+/* =========================================================
+   INSTRUMENT SHOWCASE — HERO-MATCHING SVG ATMOSPHERE
+   Same cross-grid language, gold accents and musical lines.
+   ========================================================= */
+
+.tilt-section{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+  background:#070708 !important;
+}
+
+.tilt-section > .container{
+  position:relative !important;
+  z-index:5 !important;
+}
+
+/* Full section cross grid — visually matches the hero */
+.tilt-section .showcase-svg-bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  pointer-events:none;
+  opacity:.34;
+}
+
+.tilt-section .showcase-svg-bg .showcase-grid-line{
+  stroke:#d8a63c;
+  stroke-width:1;
+  opacity:.20;
+  vector-effect:non-scaling-stroke;
+}
+
+.tilt-section .showcase-svg-bg .showcase-cross{
+  stroke:#d8a63c;
+  stroke-width:1.35;
+  stroke-linecap:round;
+  opacity:.48;
+  fill:none;
+  vector-effect:non-scaling-stroke;
+}
+
+.tilt-section .showcase-svg-bg .showcase-glow{
+  fill:none;
+  stroke:#d8a63c;
+  stroke-width:1;
+  opacity:.20;
+  vector-effect:non-scaling-stroke;
+}
+
+.tilt-section .showcase-svg-bg .showcase-sweep{
+  fill:url(#showcaseGoldSweep);
+  opacity:.10;
+  animation:showcaseSweep 13s ease-in-out infinite;
+}
+
+@keyframes showcaseSweep{
+  0%{transform:translateX(-45%);}
+  50%{transform:translateX(15%);}
+  100%{transform:translateX(45%);}
+}
+
+/* Dark center vignette, exactly like the hero atmosphere */
+.tilt-section .showcase-vignette{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      ellipse 55% 58% at 50% 50%,
+      rgba(0,0,0,.02) 0%,
+      rgba(0,0,0,.20) 52%,
+      rgba(0,0,0,.72) 100%
+    ),
+    radial-gradient(
+      circle at 82% 42%,
+      rgba(216,166,60,.10),
+      transparent 30%
+    );
+}
+
+/* Decorative musical SVG around the heading */
+.tilt-section .showcase-music-art{
+  position:absolute;
+  top:62px;
+  right:5%;
+  width:300px;
+  height:180px;
+  z-index:2;
+  pointer-events:none;
+  opacity:.34;
+}
+
+.tilt-section .showcase-music-art path,
+.tilt-section .showcase-music-art circle,
+.tilt-section .showcase-music-art line{
+  fill:none;
+  stroke:#d8a63c;
+  stroke-width:1.15;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  vector-effect:non-scaling-stroke;
+}
+
+.tilt-section .showcase-music-art .note-fill{
+  fill:#d8a63c;
+  stroke:none;
+}
+
+.tilt-section .showcase-music-art .soft{
+  opacity:.45;
+}
+
+/* Gold corner brackets echo the hero cards */
+.tilt-section .showcase-corner{
+  position:absolute;
+  z-index:2;
+  width:72px;
+  height:72px;
+  pointer-events:none;
+  opacity:.45;
+}
+
+.tilt-section .showcase-corner.tl{
+  top:135px;
+  left:2.5%;
+  border-top:1px solid #d8a63c;
+  border-left:1px solid #d8a63c;
+}
+
+.tilt-section .showcase-corner.br{
+  bottom:80px;
+  right:2.5%;
+  border-right:1px solid #d8a63c;
+  border-bottom:1px solid #d8a63c;
+}
+
+/* Keep cards above SVG */
+.tilt-section .tilt-grid,
+.tilt-section .section-label,
+.tilt-section h2{
+  position:relative;
+  z-index:6;
+}
+
+/* Tiny animated gold pulse */
+.tilt-section .showcase-pulse{
+  animation:showcasePulse 3.5s ease-in-out infinite;
+  transform-origin:center;
+}
+
+@keyframes showcasePulse{
+  0%,100%{opacity:.18; transform:scale(1);}
+  50%{opacity:.58; transform:scale(1.12);}
+}
+
+@media (max-width:900px){
+  .tilt-section .showcase-music-art{
+    width:210px;
+    height:130px;
+    right:-30px;
+    top:70px;
+    opacity:.20;
+  }
+
+  .tilt-section .showcase-corner{
+    opacity:.25;
+  }
+
+  .tilt-section .showcase-svg-bg{
+    opacity:.22;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .tilt-section .showcase-svg-bg .showcase-sweep,
+  .tilt-section .showcase-pulse{
+    animation:none;
+  }
+}
+</style>
+
+
+<style id="digital-art-final-match">
+/* =========================================================
+   DIGITAL ART — SAME VISUAL LANGUAGE AS DISCOVER PERFECTION
+   ========================================================= */
+
+.ascii-section{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+  background:#070708 !important;
+  min-height:100vh !important;
+}
+
+.ascii-section > .container{
+  position:relative !important;
+  z-index:6 !important;
+}
+
+/* Hero-style cross grid behind this section */
+.ascii-section .digital-art-svg-bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  pointer-events:none;
+  opacity:.34;
+}
+
+.ascii-section .digital-art-svg-bg .digital-grid-line{
+  stroke:#d8a63c;
+  stroke-width:1;
+  opacity:.20;
+  vector-effect:non-scaling-stroke;
+}
+
+.ascii-section .digital-art-svg-bg .digital-cross{
+  stroke:#d8a63c;
+  stroke-width:1.35;
+  stroke-linecap:round;
+  opacity:.48;
+  fill:none;
+  vector-effect:non-scaling-stroke;
+}
+
+.ascii-section .digital-art-svg-bg .digital-ring{
+  fill:none;
+  stroke:#d8a63c;
+  stroke-width:1;
+  opacity:.18;
+  vector-effect:non-scaling-stroke;
+}
+
+.ascii-section .digital-art-svg-bg .digital-sweep{
+  fill:url(#digitalGoldSweep);
+  opacity:.09;
+  animation:digitalSweep 13s ease-in-out infinite;
+}
+
+@keyframes digitalSweep{
+  0%{transform:translateX(-45%);}
+  50%{transform:translateX(15%);}
+  100%{transform:translateX(45%);}
+}
+
+/* Match the same dark/gold atmospheric treatment */
+.ascii-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      circle at 78% 42%,
+      rgba(216,166,60,.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 18% 62%,
+      rgba(88,45,130,.09),
+      transparent 35%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.05),
+      rgba(0,0,0,.48)
+    );
+}
+
+/* Larger, stronger typography */
+.ascii-section .ascii-container{
+  min-height:100vh !important;
+  display:grid !important;
+  grid-template-columns:minmax(480px, .95fr) minmax(500px, 1.05fr) !important;
+  gap:90px !important;
+  align-items:center !important;
+  position:relative !important;
+  z-index:7 !important;
+}
+
+.ascii-section .ascii-container > div:first-child{
+  max-width:620px !important;
+  position:relative !important;
+  z-index:8 !important;
+}
+
+.ascii-section .ascii-container .section-label{
+  font-size:14px !important;
+  letter-spacing:.30em !important;
+  margin-bottom:28px !important;
+  color:#d8a63c !important;
+}
+
+.ascii-section .ascii-container h2{
+  font-size:clamp(4.5rem,7vw,7.4rem) !important;
+  line-height:.91 !important;
+  letter-spacing:-.055em !important;
+  margin-bottom:30px !important;
+  text-shadow:0 3px 24px rgba(0,0,0,.5) !important;
+}
+
+.ascii-section .ascii-container h2 span{
+  font-size:inherit !important;
+}
+
+.ascii-section .ascii-container p{
+  max-width:560px !important;
+  font-size:20px !important;
+  line-height:1.75 !important;
+  color:rgba(245,242,234,.72) !important;
+  text-shadow:0 2px 14px rgba(0,0,0,.6) !important;
+}
+
+/* Image/canvas side becomes a premium hero-style panel */
+.ascii-section .ascii-canvas-wrapper{
+  position:relative !important;
+  z-index:8 !important;
+  width:100% !important;
+  min-height:590px !important;
+  border:1px solid rgba(216,166,60,.28) !important;
+  border-radius:24px !important;
+  overflow:hidden !important;
+  background:rgba(5,5,8,.42) !important;
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.38),
+    inset 0 0 0 1px rgba(216,166,60,.05) !important;
+}
+
+.ascii-section .ascii-canvas-wrapper::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:3;
+  pointer-events:none;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5,5,8,.18),
+      transparent 35%,
+      transparent 72%,
+      rgba(5,5,8,.12)
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.05),
+      rgba(0,0,0,.28)
+    );
+}
+
+.ascii-section .ascii-canvas-wrapper::after{
+  content:"";
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:55px;
+  height:55px;
+  border-top:1px solid rgba(216,166,60,.7);
+  border-right:1px solid rgba(216,166,60,.7);
+  z-index:5;
+  pointer-events:none;
+}
+
+/* Decorative floating gold dots */
+.ascii-section .digital-art-dot{
+  position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#d8a63c;
+  box-shadow:0 0 14px rgba(216,166,60,.65);
+  opacity:.55;
+  z-index:4;
+  pointer-events:none;
+}
+
+.ascii-section .digital-art-dot.one{top:18%;left:7%;}
+.ascii-section .digital-art-dot.two{top:27%;right:42%;}
+.ascii-section .digital-art-dot.three{bottom:22%;left:31%;}
+.ascii-section .digital-art-dot.four{bottom:13%;right:8%;}
+
+@media (max-width:1100px){
+  .ascii-section .ascii-container{
+    grid-template-columns:1fr 1fr !important;
+    gap:45px !important;
+  }
+
+  .ascii-section .ascii-container h2{
+    font-size:clamp(4rem,7vw,6rem) !important;
+  }
+
+  .ascii-section .ascii-canvas-wrapper{
+    min-height:500px !important;
+  }
+}
+
+@media (max-width:900px){
+  .ascii-section{
+    min-height:auto !important;
+    padding:100px 0 !important;
+  }
+
+  .ascii-section .ascii-container{
+    min-height:auto !important;
+    display:flex !important;
+    flex-direction:column !important;
+    gap:45px !important;
+    align-items:stretch !important;
+  }
+
+  .ascii-section .ascii-container h2{
+    font-size:clamp(3.7rem,15vw,6rem) !important;
+  }
+
+  .ascii-section .ascii-container p{
+    font-size:17px !important;
+  }
+
+  .ascii-section .ascii-canvas-wrapper{
+    min-height:430px !important;
+  }
+
+  .ascii-section .digital-art-svg-bg{
+    opacity:.22;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .ascii-section .digital-art-svg-bg .digital-sweep{
+    animation:none;
+  }
+}
+</style>
+
+
+<style id="precision-final-match">
+/* =========================================================
+   PRECISION / CRAFTED FOR PERFORMERS
+   Same background + SVG language as Discover Perfection
+   ========================================================= */
+
+.dot-section{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+  background:#070708 !important;
+  min-height:100vh !important;
+}
+
+.dot-section > .container{
+  position:relative !important;
+  z-index:6 !important;
+}
+
+/* Hero-style cross grid */
+.dot-section .precision-svg-bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  pointer-events:none;
+  opacity:.34;
+}
+
+.dot-section .precision-svg-bg .precision-grid{
+  stroke:#d8a63c;
+  stroke-width:1;
+  opacity:.20;
+  vector-effect:non-scaling-stroke;
+}
+
+.dot-section .precision-svg-bg .precision-cross{
+  stroke:#d8a63c;
+  stroke-width:1.35;
+  stroke-linecap:round;
+  opacity:.48;
+  fill:none;
+  vector-effect:non-scaling-stroke;
+}
+
+.dot-section .precision-svg-bg .precision-ring{
+  fill:none;
+  stroke:#d8a63c;
+  stroke-width:1;
+  opacity:.18;
+  vector-effect:non-scaling-stroke;
+}
+
+.dot-section .precision-svg-bg .precision-sweep{
+  fill:url(#precisionGoldSweep);
+  opacity:.09;
+  animation:precisionSweep 13s ease-in-out infinite;
+}
+
+@keyframes precisionSweep{
+  0%{transform:translateX(-45%);}
+  50%{transform:translateX(15%);}
+  100%{transform:translateX(45%);}
+}
+
+/* Same dark + gold atmospheric background */
+.dot-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      circle at 76% 42%,
+      rgba(216,166,60,.12),
+      transparent 31%
+    ),
+    radial-gradient(
+      circle at 17% 58%,
+      rgba(88,45,130,.09),
+      transparent 35%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.04),
+      rgba(0,0,0,.50)
+    );
+}
+
+/* BIGGER layout */
+.dot-section .container > div:first-child{
+  min-height:100vh !important;
+  grid-template-columns:minmax(560px,1.08fr) minmax(500px,.92fr) !important;
+  gap:100px !important;
+  align-items:center !important;
+  position:relative !important;
+  z-index:7 !important;
+}
+
+/* LEFT visual */
+.dot-section .dot-container{
+  position:relative !important;
+  z-index:8 !important;
+  width:100% !important;
+  min-height:680px !important;
+  border:1px solid rgba(216,166,60,.28) !important;
+  border-radius:24px !important;
+  overflow:hidden !important;
+  background:rgba(5,5,8,.42) !important;
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.38),
+    inset 0 0 0 1px rgba(216,166,60,.05) !important;
+}
+
+.dot-section .dot-container::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5,5,8,.12),
+      transparent 38%,
+      transparent 72%,
+      rgba(5,5,8,.10)
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.04),
+      rgba(0,0,0,.30)
+    );
+}
+
+.dot-section .dot-container::after{
+  content:"";
+  position:absolute;
+  top:18px;
+  left:18px;
+  width:58px;
+  height:58px;
+  z-index:4;
+  pointer-events:none;
+  border-top:1px solid rgba(216,166,60,.75);
+  border-left:1px solid rgba(216,166,60,.75);
+}
+
+/* Canvas fills the larger visual panel */
+.dot-section #dot-canvas{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+}
+
+/* RIGHT CONTENT — BIG */
+.dot-section .container > div:first-child > div:last-child{
+  position:relative !important;
+  z-index:9 !important;
+  max-width:650px !important;
+}
+
+.dot-section .section-label{
+  font-size:14px !important;
+  letter-spacing:.30em !important;
+  margin-bottom:28px !important;
+  color:#d8a63c !important;
+}
+
+.dot-section h2{
+  font-size:clamp(4.5rem,7vw,7.3rem) !important;
+  line-height:.91 !important;
+  letter-spacing:-.055em !important;
+  margin-bottom:30px !important;
+  text-shadow:0 3px 24px rgba(0,0,0,.52) !important;
+}
+
+.dot-section h2 span{
+  font-size:inherit !important;
+}
+
+.dot-section p{
+  max-width:580px !important;
+  font-size:20px !important;
+  line-height:1.75 !important;
+  color:rgba(245,242,234,.72) !important;
+  text-shadow:0 2px 14px rgba(0,0,0,.6) !important;
+}
+
+/* Floating gold dots */
+.dot-section .precision-dot{
+  position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#d8a63c;
+  box-shadow:0 0 14px rgba(216,166,60,.65);
+  opacity:.55;
+  z-index:4;
+  pointer-events:none;
+}
+
+.dot-section .precision-dot.one{top:16%;left:7%;}
+.dot-section .precision-dot.two{top:27%;right:41%;}
+.dot-section .precision-dot.three{bottom:22%;left:29%;}
+.dot-section .precision-dot.four{bottom:13%;right:8%;}
+
+@media (max-width:1100px){
+  .dot-section .container > div:first-child{
+    grid-template-columns:1fr 1fr !important;
+    gap:50px !important;
+  }
+
+  .dot-section .dot-container{
+    min-height:560px !important;
+  }
+
+  .dot-section h2{
+    font-size:clamp(4rem,7vw,6rem) !important;
+  }
+}
+
+@media (max-width:900px){
+  .dot-section{
+    min-height:auto !important;
+    padding:100px 0 !important;
+  }
+
+  .dot-section .container > div:first-child{
+    min-height:auto !important;
+    display:flex !important;
+    flex-direction:column !important;
+    gap:45px !important;
+    align-items:stretch !important;
+  }
+
+  .dot-section .dot-container{
+    order:2 !important;
+    min-height:430px !important;
+  }
+
+  .dot-section .container > div:first-child > div:last-child{
+    order:1 !important;
+  }
+
+  .dot-section h2{
+    font-size:clamp(3.7rem,15vw,6rem) !important;
+  }
+
+  .dot-section p{
+    font-size:17px !important;
+  }
+
+  .dot-section .precision-svg-bg{
+    opacity:.22;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .dot-section .precision-svg-bg .precision-sweep{
+    animation:none;
+  }
+}
+</style>
+
+
+<style id="gallery-final-match">
+/* =========================================================
+   GALLERY — SAME HERO / DISCOVER PERFECTION BACKGROUND
+   No sticky/fixed behavior and no blank space after section.
+   ========================================================= */
+
+.coverflow-section{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+  background:#070708 !important;
+  padding:105px 0 0 !important;
+  margin:0 !important;
+  min-height:0 !important;
+  height:auto !important;
+}
+
+/* Hero-style atmosphere */
+.coverflow-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      circle at 78% 35%,
+      rgba(216,166,60,.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 18% 62%,
+      rgba(88,45,130,.09),
+      transparent 35%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.04),
+      rgba(0,0,0,.48)
+    );
+}
+
+/* Cross grid */
+.coverflow-section::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  opacity:.30;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(216,166,60,.045) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      rgba(216,166,60,.045) 1px,
+      transparent 1px
+    );
+  background-size:52px 52px;
+}
+
+/* Decorative cross points */
+.coverflow-section .gallery-crosses{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  opacity:.45;
+  background-image:
+    radial-gradient(circle at 12px 12px, rgba(216,166,60,.65) 1.4px, transparent 1.7px);
+  background-size:52px 52px;
+  mask-image:linear-gradient(
+    to bottom,
+    transparent,
+    black 18%,
+    black 82%,
+    transparent
+  );
+}
+
+.coverflow-section > .container{
+  position:relative !important;
+  z-index:5 !important;
+  margin:0 auto !important;
+}
+
+/* Bigger heading like the other sections */
+.coverflow-section .section-label{
+  font-size:14px !important;
+  letter-spacing:.30em !important;
+  color:#d8a63c !important;
+  margin-bottom:22px !important;
+}
+
+.coverflow-section h2{
+  font-size:clamp(4rem,7vw,7rem) !important;
+  line-height:.92 !important;
+  letter-spacing:-.055em !important;
+  margin:0 0 42px !important;
+}
+
+/* NO sticky/fixed gallery behavior */
+.coverflow-section,
+.coverflow-wrapper,
+.coverflow-track,
+.coverflow-item,
+.coverflow-controls{
+  position:relative !important;
+}
+
+/* Gallery fills width without leaving a large empty area */
+.coverflow-wrapper{
+  width:100% !important;
+  height:500px !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* Horizontal collection */
+.coverflow-track{
+  width:100% !important;
+  height:100% !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:18px !important;
+  padding:0 !important;
+  margin:0 !important;
+  transform:none !important;
+}
+
+/* Cards */
+.coverflow-item{
+  flex:0 0 205px !important;
+  width:205px !important;
+  height:360px !important;
+  margin:0 !important;
+  border-radius:20px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(216,166,60,.20) !important;
+  background:#08080a !important;
+  box-shadow:0 22px 55px rgba(0,0,0,.42) !important;
+  transform:perspective(1000px) rotateY(0deg) translateY(0) scale(.90) !important;
+  opacity:.62 !important;
+  transition:
+    transform .55s ease,
+    opacity .55s ease,
+    border-color .55s ease,
+    box-shadow .55s ease !important;
+}
+
+.coverflow-item img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  display:block !important;
+}
+
+/* Center card */
+.coverflow-item.active{
+  flex-basis:250px !important;
+  width:250px !important;
+  height:430px !important;
+  opacity:1 !important;
+  transform:perspective(1000px) rotateY(0deg) translateY(0) scale(1) !important;
+  border-color:rgba(216,166,60,.75) !important;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.52),
+    0 0 35px rgba(216,166,60,.12) !important;
+  z-index:4 !important;
+}
+
+/* Keep side cards slightly angled, but compact */
+.coverflow-item:nth-child(1),
+.coverflow-item:nth-child(6){
+  transform:perspective(1000px) rotateY(8deg) translateY(12px) scale(.84) !important;
+}
+
+.coverflow-item:nth-child(2),
+.coverflow-item:nth-child(5){
+  transform:perspective(1000px) rotateY(5deg) translateY(6px) scale(.90) !important;
+}
+
+.coverflow-item:nth-child(4){
+  transform:perspective(1000px) rotateY(-5deg) translateY(6px) scale(.90) !important;
+}
+
+/* Controls stay immediately under the gallery */
+.coverflow-controls{
+  height:72px !important;
+  margin:0 !important;
+  padding:18px 0 0 !important;
+  display:flex !important;
+  align-items:flex-start !important;
+  justify-content:center !important;
+  gap:12px !important;
+}
+
+/* Buttons */
+.coverflow-btn{
+  width:46px !important;
+  height:46px !important;
+  border-radius:50% !important;
+  border:1px solid rgba(216,166,60,.40) !important;
+  background:rgba(7,7,8,.75) !important;
+  color:#d8a63c !important;
+  display:grid !important;
+  place-items:center !important;
+  cursor:pointer !important;
+  transition:.3s ease !important;
+}
+
+.coverflow-btn:hover{
+  background:#d8a63c !important;
+  color:#070708 !important;
+  border-color:#d8a63c !important;
+  transform:translateY(-2px) !important;
+}
+
+/* Absolutely no hidden extra bottom area */
+.coverflow-section .container{
+  padding-bottom:0 !important;
+}
+
+.coverflow-section .coverflow-controls + *{
+  margin-top:0 !important;
+}
+
+/* Mobile */
+@media(max-width:900px){
+  .coverflow-section{
+    padding-top:80px !important;
+  }
+
+  .coverflow-section h2{
+    font-size:clamp(3.5rem,14vw,5.5rem) !important;
+    margin-bottom:30px !important;
+  }
+
+  .coverflow-wrapper{
+    height:410px !important;
+  }
+
+  .coverflow-track{
+    gap:10px !important;
+  }
+
+  .coverflow-item{
+    flex-basis:135px !important;
+    width:135px !important;
+    height:280px !important;
+  }
+
+  .coverflow-item.active{
+    flex-basis:175px !important;
+    width:175px !important;
+    height:350px !important;
+  }
+
+  .coverflow-item:nth-child(1),
+  .coverflow-item:nth-child(6){
+    display:none !important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .coverflow-item{
+    transition:none !important;
+  }
+}
+</style>
+
+
+<style id="timeline-final-scroll-fix">
+/* =========================================================
+   EVOLUTION OF SOUND / TIMELINE
+   Normal page flow + hero-matching SVG background.
+   No sticky trap. Horizontal timeline auto-plays ONCE.
+   ========================================================= */
+
+.timeline-section{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+  background:#070708 !important;
+  min-height:100vh !important;
+  height:auto !important;
+  margin:0 !important;
+  padding:110px 0 100px !important;
+}
+
+/* Hero / Discover Perfection style atmosphere */
+.timeline-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      circle at 78% 38%,
+      rgba(216,166,60,.12),
+      transparent 31%
+    ),
+    radial-gradient(
+      circle at 16% 68%,
+      rgba(88,45,130,.09),
+      transparent 35%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.04),
+      rgba(0,0,0,.48)
+    );
+}
+
+/* Absolutely no sticky positioning */
+.timeline-section,
+.timeline-section *,
+.timeline-wrapper,
+.timeline-track,
+.timeline-item{
+  position:relative;
+}
+
+.timeline-section > .container{
+  position:relative !important;
+  z-index:5 !important;
+}
+
+/* SVG grid layer */
+.timeline-section .timeline-svg-bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:1;
+  pointer-events:none;
+  opacity:.34;
+}
+
+.timeline-section .timeline-svg-bg .timeline-grid{
+  stroke:#d8a63c;
+  stroke-width:1;
+  opacity:.20;
+  vector-effect:non-scaling-stroke;
+}
+
+.timeline-section .timeline-svg-bg .timeline-cross{
+  stroke:#d8a63c;
+  stroke-width:1.35;
+  stroke-linecap:round;
+  opacity:.48;
+  fill:none;
+  vector-effect:non-scaling-stroke;
+}
+
+.timeline-section .timeline-svg-bg .timeline-ring{
+  fill:none;
+  stroke:#d8a63c;
+  stroke-width:1;
+  opacity:.18;
+  vector-effect:non-scaling-stroke;
+}
+
+/* Larger title */
+.timeline-section .section-label{
+  position:relative !important;
+  z-index:6 !important;
+  font-size:14px !important;
+  letter-spacing:.30em !important;
+  color:#d8a63c !important;
+  margin-bottom:24px !important;
+}
+
+.timeline-section > .container > h2{
+  position:relative !important;
+  z-index:6 !important;
+  font-size:clamp(4rem,7vw,7rem) !important;
+  line-height:.92 !important;
+  letter-spacing:-.055em !important;
+  margin-bottom:46px !important;
+}
+
+/* Horizontal timeline is independently scrollable */
+.timeline-wrapper{
+  position:relative !important;
+  z-index:7 !important;
+  width:100% !important;
+  overflow:hidden !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+.timeline-track{
+  width:100% !important;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:stretch !important;
+  gap:28px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  padding:8px 4px 28px !important;
+  margin:0 !important;
+  scroll-behavior:smooth !important;
+  overscroll-behavior-x:contain !important;
+  overscroll-behavior-y:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+  scrollbar-width:thin !important;
+  scrollbar-color:rgba(216,166,60,.65) rgba(255,255,255,.05) !important;
+  touch-action:pan-x pan-y !important;
+}
+
+/* Do NOT make this section capture the page scroll */
+.timeline-track::-webkit-scrollbar{
+  height:7px;
+}
+
+.timeline-track::-webkit-scrollbar-track{
+  background:rgba(255,255,255,.035);
+  border-radius:20px;
+}
+
+.timeline-track::-webkit-scrollbar-thumb{
+  background:rgba(216,166,60,.65);
+  border-radius:20px;
+}
+
+/* Cards */
+.timeline-track .timeline-item{
+  flex:0 0 330px !important;
+  width:330px !important;
+  min-width:330px !important;
+  min-height:470px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:1px solid rgba(216,166,60,.20) !important;
+  border-radius:22px !important;
+  overflow:hidden !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(16,15,18,.94),
+      rgba(7,7,8,.98)
+    ) !important;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.38),
+    inset 0 0 0 1px rgba(216,166,60,.04) !important;
+  transform:none !important;
+}
+
+/* Image */
+.timeline-track .timeline-image{
+  width:100% !important;
+  height:235px !important;
+  margin:0 !important;
+  overflow:hidden !important;
+}
+
+.timeline-track .timeline-image img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  display:block !important;
+}
+
+/* Year */
+.timeline-track .timeline-year{
+  position:absolute !important;
+  top:18px !important;
+  left:18px !important;
+  z-index:5 !important;
+  padding:8px 13px !important;
+  border:1px solid rgba(216,166,60,.55) !important;
+  border-radius:30px !important;
+  background:rgba(7,7,8,.72) !important;
+  color:#d8a63c !important;
+  font-size:12px !important;
+  letter-spacing:.18em !important;
+}
+
+/* Content */
+.timeline-track .timeline-content{
+  padding:28px 26px 30px !important;
+}
+
+.timeline-track .timeline-content h3{
+  font-size:25px !important;
+  line-height:1.15 !important;
+  margin:0 0 13px !important;
+  color:#f5f2ea !important;
+}
+
+.timeline-track .timeline-content p{
+  font-size:16px !important;
+  line-height:1.65 !important;
+  margin:0 !important;
+  color:rgba(245,242,234,.65) !important;
+}
+
+/* Gold connector */
+.timeline-track .timeline-line{
+  display:block !important;
+  position:absolute !important;
+  right:-29px !important;
+  top:50% !important;
+  width:28px !important;
+  height:1px !important;
+  background:linear-gradient(
+    90deg,
+    rgba(216,166,60,.65),
+    transparent
+  ) !important;
+}
+
+/* Auto-scroll state never locks the page */
+.timeline-section.timeline-autoplaying .timeline-track{
+  cursor:default !important;
+}
+
+/* Mobile */
+@media(max-width:900px){
+  .timeline-section{
+    min-height:auto !important;
+    padding:85px 0 70px !important;
+  }
+
+  .timeline-section > .container > h2{
+    font-size:clamp(3.6rem,14vw,5.8rem) !important;
+    margin-bottom:34px !important;
+  }
+
+  .timeline-track{
+    gap:18px !important;
+    padding-bottom:22px !important;
+  }
+
+  .timeline-track .timeline-item{
+    flex-basis:280px !important;
+    width:280px !important;
+    min-width:280px !important;
+    min-height:430px !important;
+  }
+
+  .timeline-track .timeline-image{
+    height:205px !important;
+  }
+
+  .timeline-track .timeline-content h3{
+    font-size:22px !important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .timeline-track{
+    scroll-behavior:auto !important;
+  }
+}
+</style>
+
+
+<style id="timeline-ultra-smooth">
+/* =========================================================
+   FINAL TIMELINE SCROLL FIX
+   The page owns vertical scrolling. The timeline never traps it.
+   ========================================================= */
+
+html{
+  scroll-behavior:smooth !important;
+}
+
+body{
+  overscroll-behavior-y:auto !important;
+}
+
+/* Timeline remains ordinary document content */
+.timeline-section{
+  position:relative !important;
+  overflow:hidden !important;
+  height:auto !important;
+  min-height:100vh !important;
+  max-height:none !important;
+  scroll-snap-type:none !important;
+  scroll-snap-align:none !important;
+}
+
+/* Horizontal cards do NOT receive vertical scroll ownership */
+.timeline-section .timeline-wrapper{
+  overflow:hidden !important;
+  height:auto !important;
+  max-height:none !important;
+  overscroll-behavior:none !important;
+}
+
+.timeline-section .timeline-track{
+  overflow:hidden !important;
+  overflow-x:hidden !important;
+  overflow-y:hidden !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:500px !important;
+  display:flex !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+  gap:28px !important;
+  padding:8px 4px 28px !important;
+  margin:0 !important;
+  scroll-behavior:auto !important;
+  transform:translate3d(0,0,0) !important;
+  will-change:transform !important;
+}
+
+/* Cards stay horizontal */
+.timeline-section .timeline-item{
+  flex:0 0 330px !important;
+  min-width:330px !important;
+}
+
+/* The one-time motion is applied by JS only after the section enters view. */
+.timeline-section .timeline-track.timeline-play{
+  animation:timelineOnePass 2.4s cubic-bezier(.22,.61,.36,1) 1 both !important;
+}
+
+@keyframes timelineOnePass{
+  0%{transform:translate3d(0,0,0);}
+  100%{transform:translate3d(-22%,0,0);}
+}
+
+/* Make sure no hidden/sticky state can capture the page */
+.timeline-section,
+.timeline-section .timeline-wrapper,
+.timeline-section .timeline-track{
+  position:relative !important;
+  top:auto !important;
+  bottom:auto !important;
+  left:auto !important;
+  right:auto !important;
+  inset:auto !important;
+}
+
+/* Keep SVG behind content */
+.timeline-section .timeline-svg-bg{
+  position:absolute !important;
+  inset:0 !important;
+  pointer-events:none !important;
+}
+
+/* On small screens, use a smaller single pass */
+@media(max-width:900px){
+  .timeline-section .timeline-track{
+    min-height:460px !important;
+    gap:18px !important;
+  }
+
+  .timeline-section .timeline-item{
+    flex-basis:280px !important;
+    min-width:280px !important;
+  }
+
+  .timeline-section .timeline-track.timeline-play{
+    animation-name:timelineOnePassMobile !important;
+  }
+
+  @keyframes timelineOnePassMobile{
+    0%{transform:translate3d(0,0,0);}
+    100%{transform:translate3d(-18%,0,0);}
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto !important;}
+  .timeline-section .timeline-track.timeline-play{
+    animation:none !important;
+  }
+}
+</style>
+
+
+<style id="timeline-absolute-final-fix">
+/* =========================================================
+   ABSOLUTE FINAL TIMELINE SCROLL FIX
+   The page owns vertical scrolling.
+   The timeline does NOT own wheel scrolling.
+   ========================================================= */
+
+html{
+  scroll-behavior:smooth !important;
+}
+
+.timeline-section{
+  position:relative !important;
+  display:block !important;
+  height:auto !important;
+  min-height:100vh !important;
+  max-height:none !important;
+  overflow:hidden !important;
+  overflow-x:hidden !important;
+  overflow-y:visible !important;
+  overscroll-behavior:auto !important;
+  scroll-snap-align:none !important;
+  scroll-snap-stop:normal !important;
+  touch-action:pan-y !important;
+}
+
+/* Never let any timeline child become sticky/fixed or independently scroll. */
+.timeline-section,
+.timeline-section .container,
+.timeline-section .timeline-wrapper,
+.timeline-section .timeline-track,
+.timeline-section .timeline-item{
+  position:relative !important;
+  top:auto !important;
+  bottom:auto !important;
+  left:auto !important;
+  right:auto !important;
+  max-height:none !important;
+}
+
+.timeline-section .timeline-wrapper{
+  width:100% !important;
+  overflow:hidden !important;
+  overflow-x:hidden !important;
+  overflow-y:hidden !important;
+  overscroll-behavior:none !important;
+  touch-action:pan-y !important;
+}
+
+/* The track is a visual strip, NOT a scrollbar. */
+.timeline-section .timeline-track{
+  width:max-content !important;
+  min-width:100% !important;
+  display:flex !important;
+  flex-direction:row !important;
+  flex-wrap:nowrap !important;
+  gap:28px !important;
+  overflow:visible !important;
+  overflow-x:visible !important;
+  overflow-y:visible !important;
+  padding:8px 4px 28px !important;
+  margin:0 !important;
+  scrollbar-width:none !important;
+  scroll-behavior:auto !important;
+  scroll-snap-type:none !important;
+  overscroll-behavior:none !important;
+  touch-action:pan-y !important;
+  transform:translate3d(0,0,0) !important;
+  will-change:transform;
+}
+
+.timeline-section .timeline-track::-webkit-scrollbar{
+  display:none !important;
+  width:0 !important;
+  height:0 !important;
+}
+
+/* Cards remain visible while the strip moves once. */
+.timeline-section .timeline-item{
+  flex:0 0 330px !important;
+  width:330px !important;
+  min-width:330px !important;
+  transform:none !important;
+}
+
+/* Do not let reveal classes create a scroll-lock illusion. */
+.timeline-section .timeline-item.reveal,
+.timeline-section .timeline-section.reveal{
+  will-change:transform,opacity;
+}
+
+/* Keep SVG background completely passive. */
+.timeline-section .timeline-svg-bg{
+  pointer-events:none !important;
+}
+
+/* Mobile: smaller strip, still no internal scrolling. */
+@media(max-width:900px){
+  .timeline-section .timeline-item{
+    flex:0 0 280px !important;
+    width:280px !important;
+    min-width:280px !important;
+  }
+}
+</style>
+
+
+<style id="stackly-premium-footer-final">
+/* =========================================================
+   FINAL PREMIUM FOOTER
+   Inspired by the supplied reference:
+   4-column layout, gold headings, clean divider,
+   social circles, subscribe box and back-to-top button.
+   ========================================================= */
+
+.site-footer{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+  background:#050506 !important;
+  color:#f5f2ea !important;
+  padding:90px 0 24px !important;
+  margin:0 !important;
+  border-top:1px solid rgba(216,166,60,.10) !important;
+}
+
+.site-footer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 12% 15%, rgba(216,166,60,.10), transparent 28%),
+    radial-gradient(circle at 88% 72%, rgba(88,45,130,.08), transparent 30%),
+    linear-gradient(90deg, rgba(216,166,60,.025) 1px, transparent 1px),
+    linear-gradient(rgba(216,166,60,.025) 1px, transparent 1px);
+  background-size:auto,auto,52px 52px,52px 52px;
+}
+
+.site-footer .container{
+  position:relative !important;
+  z-index:2 !important;
+}
+
+.site-footer .footer-grid{
+  display:grid !important;
+  grid-template-columns:1.25fr .9fr .9fr 1.15fr !important;
+  gap:70px !important;
+  padding:0 18px 58px !important;
+  align-items:start !important;
+}
+
+.site-footer .footer-brand{
+  max-width:330px !important;
+}
+
+.site-footer .footer-brand .brand{
+  display:flex !important;
+  align-items:center !important;
+  gap:14px !important;
+}
+
+.site-footer .footer-brand .brand-logo{
+  width:58px !important;
+  height:58px !important;
+  border:1px solid rgba(216,166,60,.75) !important;
+  border-radius:50% !important;
+  display:grid !important;
+  place-items:center !important;
+  background:rgba(216,166,60,.04) !important;
+  box-shadow:0 0 25px rgba(216,166,60,.08) !important;
+}
+
+.site-footer .footer-brand .brand-logo img{
+  width:78% !important;
+  height:78% !important;
+}
+
+.site-footer .footer-brand .brand-text h1{
+  color:#f5f2ea !important;
+  letter-spacing:.10em !important;
+  margin:0 !important;
+}
+
+.site-footer .footer-brand .brand-text span{
+  color:#d8a63c !important;
+  text-transform:uppercase !important;
+  letter-spacing:.20em !important;
+  font-size:10px !important;
+}
+
+.site-footer .footer-brand > p{
+  color:rgba(245,242,234,.58) !important;
+  line-height:1.75 !important;
+  font-size:14px !important;
+  margin:22px 0 0 !important;
+}
+
+.site-footer .footer-col h4{
+  color:#d8a63c !important;
+  font-size:15px !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase !important;
+  margin:0 0 20px !important;
+}
+
+.site-footer .footer-col a{
+  display:block !important;
+  width:max-content !important;
+  color:rgba(245,242,234,.68) !important;
+  font-size:14px !important;
+  line-height:1.4 !important;
+  text-decoration:none !important;
+  margin:0 0 13px !important;
+  transition:color .25s ease, transform .25s ease !important;
+}
+
+.site-footer .footer-col a:hover{
+  color:#d8a63c !important;
+  transform:translateX(4px) !important;
+}
+
+.site-footer .footer-col .footer-contact{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  color:rgba(245,242,234,.62) !important;
+}
+
+.site-footer .footer-subscribe h4{
+  color:#f5f2ea !important;
+  font-size:15px !important;
+  margin:0 0 20px !important;
+}
+
+.site-footer .footer-subscribe p{
+  color:rgba(245,242,234,.52) !important;
+  font-size:13px !important;
+  line-height:1.6 !important;
+  margin:0 0 18px !important;
+}
+
+.site-footer .footer-subscribe-form{
+  display:flex !important;
+  gap:9px !important;
+  flex-direction:column !important;
+}
+
+.site-footer .footer-subscribe-form .subscribe-input{
+  width:100% !important;
+  height:48px !important;
+  box-sizing:border-box !important;
+  border:1px solid rgba(216,166,60,.20) !important;
+  border-radius:8px !important;
+  background:rgba(255,255,255,.96) !important;
+  color:#17130b !important;
+  padding:0 14px !important;
+  outline:none !important;
+}
+
+.site-footer .footer-subscribe-form .subscribe-button{
+  width:max-content !important;
+  height:44px !important;
+  padding:0 22px !important;
+  border:0 !important;
+  border-radius:7px !important;
+  background:#d8a63c !important;
+  color:#070708 !important;
+  font-weight:700 !important;
+  cursor:pointer !important;
+  transition:transform .25s ease, box-shadow .25s ease !important;
+}
+
+.site-footer .footer-subscribe-form .subscribe-button:hover{
+  transform:translateY(-2px) !important;
+  box-shadow:0 12px 25px rgba(216,166,60,.20) !important;
+}
+
+/* Back to top */
+.site-footer .footer-top-button{
+  position:absolute !important;
+  right:28px !important;
+  bottom:112px !important;
+  width:42px !important;
+  height:42px !important;
+  border:1px solid rgba(216,166,60,.45) !important;
+  border-radius:6px !important;
+  background:#d8a63c !important;
+  color:#070708 !important;
+  display:grid !important;
+  place-items:center !important;
+  cursor:pointer !important;
+  z-index:5 !important;
+  transition:transform .25s ease, box-shadow .25s ease !important;
+}
+
+.site-footer .footer-top-button:hover{
+  transform:translateY(-3px) !important;
+  box-shadow:0 12px 30px rgba(216,166,60,.20) !important;
+}
+
+.site-footer .footer-divider{
+  height:1px !important;
+  background:linear-gradient(90deg, transparent, rgba(245,242,234,.35), transparent) !important;
+  margin:0 0 24px !important;
+}
+
+.site-footer .footer-bottom{
+  min-height:62px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:20px !important;
+  padding:0 18px !important;
+  color:rgba(245,242,234,.48) !important;
+  font-size:12px !important;
+}
+
+.site-footer .footer-socials{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:10px !important;
+  position:absolute !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+}
+
+.site-footer .footer-social{
+  width:38px !important;
+  height:38px !important;
+  display:grid !important;
+  place-items:center !important;
+  border-radius:50% !important;
+  background:#d8a63c !important;
+  color:#070708 !important;
+  text-decoration:none !important;
+  font-weight:800 !important;
+  font-size:15px !important;
+  transition:transform .25s ease, box-shadow .25s ease !important;
+}
+
+.site-footer .footer-social:hover{
+  transform:translateY(-3px) !important;
+  box-shadow:0 10px 25px rgba(216,166,60,.20) !important;
+}
+
+@media(max-width:1000px){
+  .site-footer .footer-grid{
+    grid-template-columns:1fr 1fr !important;
+    gap:45px !important;
+  }
+
+  .site-footer .footer-socials{
+    position:static !important;
+    transform:none !important;
+    order:3 !important;
+  }
+
+  .site-footer .footer-bottom{
+    flex-wrap:wrap !important;
+  }
+}
+
+@media(max-width:600px){
+  .site-footer{
+    padding:70px 0 20px !important;
+  }
+
+  .site-footer .footer-grid{
+    grid-template-columns:1fr !important;
+    gap:34px !important;
+    padding-bottom:42px !important;
+  }
+
+  .site-footer .footer-bottom{
+    flex-direction:column !important;
+    align-items:center !important;
+    text-align:center !important;
+    padding-top:8px !important;
+  }
+
+  .site-footer .footer-top-button{
+    right:18px !important;
+    bottom:118px !important;
+  }
+}
+
+
+/* =========================================================
+   OUR SOUND — KEEP THE SAME PREMIUM SECTION LANGUAGE
+   ========================================================= */
+
+.ascii-section{
+  background:#070708 !important;
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+}
+
+.ascii-section .ascii-canvas-wrapper{
+  border-color:rgba(216,166,60,.32) !important;
+  border-radius:24px !important;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.42),
+    0 0 40px rgba(216,166,60,.06),
+    inset 0 0 0 1px rgba(216,166,60,.05) !important;
+}
+
+.ascii-section .ascii-canvas-wrapper::after{
+  width:70px !important;
+  height:70px !important;
+  border-color:rgba(216,166,60,.72) !important;
+}
+
+.ascii-section .ascii-container h2{
+  font-size:clamp(4.5rem,7vw,7.4rem) !important;
+}
+
+/* =========================================================
+   PREMIUM SELECTION — MAKE THE IMAGES FEEL EXPENSIVE
+   ========================================================= */
+
+.bento-section{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+  background:#070708 !important;
+  padding-top:105px !important;
+  padding-bottom:105px !important;
+}
+
+.bento-section::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:0 !important;
+  pointer-events:none !important;
+  background:
+    radial-gradient(circle at 78% 35%, rgba(216,166,60,.11), transparent 30%),
+    radial-gradient(circle at 15% 70%, rgba(88,45,130,.08), transparent 34%),
+    linear-gradient(90deg, rgba(216,166,60,.04) 1px, transparent 1px),
+    linear-gradient(rgba(216,166,60,.04) 1px, transparent 1px) !important;
+  background-size:auto,auto,52px 52px,52px 52px !important;
+}
+
+.bento-section > .container{
+  position:relative !important;
+  z-index:3 !important;
+}
+
+.bento-section .bento-grid{
+  gap:18px !important;
+}
+
+.bento-section .bento-item{
+  border:1px solid rgba(216,166,60,.18) !important;
+  border-radius:20px !important;
+  overflow:hidden !important;
+  background:#08080a !important;
+  box-shadow:0 25px 65px rgba(0,0,0,.38) !important;
+}
+
+.bento-section .bento-item img{
+  transition:transform .8s cubic-bezier(.22,.61,.36,1), filter .5s ease !important;
+  filter:saturate(.88) contrast(1.04) brightness(.88) !important;
+}
+
+.bento-section .bento-item:hover img{
+  transform:scale(1.07) !important;
+  filter:saturate(1.08) contrast(1.05) brightness(.98) !important;
+}
+
+.bento-section .bento-item::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  pointer-events:none !important;
+  background:linear-gradient(
+    180deg,
+    rgba(0,0,0,.02) 35%,
+    rgba(0,0,0,.72) 100%
+  ) !important;
+}
+
+.bento-section .bento-item-content{
+  z-index:3 !important;
+}
+
+.bento-section .bento-item-category{
+  color:#d8a63c !important;
+}
+</style>
+
+
+<style id="our-sound-principles-music-bg">
+/* =========================================================
+   OUR SOUND + OUR PRINCIPLES
+   Same premium dark/gold background as the other sections,
+   with subtle musical SVG decoration.
+   ========================================================= */
+
+.ascii-section,
+.floating-section{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+  background:#070708 !important;
+}
+
+/* Same atmospheric gold + purple lighting */
+.ascii-section::before,
+.floating-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 78% 30%, rgba(216,166,60,.13), transparent 31%),
+    radial-gradient(circle at 18% 68%, rgba(88,45,130,.10), transparent 34%),
+    linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.50)),
+    linear-gradient(90deg, rgba(216,166,60,.035) 1px, transparent 1px),
+    linear-gradient(rgba(216,166,60,.035) 1px, transparent 1px);
+  background-size:auto,auto,auto,52px 52px,52px 52px;
+}
+
+/* Musical SVG layer */
+.music-section-svg{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  z-index:2 !important;
+  pointer-events:none !important;
+  opacity:.34 !important;
+}
+
+/* Keep content above SVG */
+.ascii-section > .container,
+.floating-section > .container{
+  position:relative !important;
+  z-index:7 !important;
+}
+
+/* Musical waveform */
+.music-wave{
+  fill:none;
+  stroke:#d8a63c;
+  stroke-width:1.2;
+  opacity:.25;
+  vector-effect:non-scaling-stroke;
+}
+
+.music-wave-strong{
+  fill:none;
+  stroke:#d8a63c;
+  stroke-width:1.7;
+  opacity:.38;
+  vector-effect:non-scaling-stroke;
+}
+
+.music-note{
+  fill:none;
+  stroke:#d8a63c;
+  stroke-width:1.4;
+  opacity:.50;
+  vector-effect:non-scaling-stroke;
+}
+
+.music-note-fill{
+  fill:#d8a63c;
+  opacity:.42;
+}
+
+.music-ring{
+  fill:none;
+  stroke:#d8a63c;
+  stroke-width:1;
+  opacity:.16;
+  vector-effect:non-scaling-stroke;
+}
+
+/* OUR SOUND: make the music decoration feel integrated,
+   not like a separate image */
+.ascii-section .music-section-svg{
+  opacity:.28 !important;
+}
+
+.ascii-section .ascii-canvas-wrapper{
+  position:relative !important;
+  z-index:8 !important;
+}
+
+/* OUR PRINCIPLES: same treatment */
+.floating-section .music-section-svg{
+  opacity:.30 !important;
+}
+
+.floating-section .floating-grid{
+  position:relative !important;
+  z-index:8 !important;
+}
+
+/* Soft animated music line */
+.music-animated-wave{
+  stroke-dasharray:12 18;
+  animation:musicWaveMove 12s linear infinite;
+}
+
+@keyframes musicWaveMove{
+  to{stroke-dashoffset:-360px;}
+}
+
+@media(max-width:900px){
+  .music-section-svg{
+    opacity:.20 !important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .music-animated-wave{
+    animation:none;
+  }
+}
+</style>
+
+
+<style id="cta-final-svg-mobile-header">
+/* =========================================================
+   FIND YOUR SOUND — SAME SVG / GRID LANGUAGE AS OTHER SECTIONS
+   ========================================================= */
+.cta-section{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+  min-height:100vh !important;
+  margin:0 !important;
+  background:#070708 !important;
+}
+.cta-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(88,45,130,.16), transparent 34%),
+    radial-gradient(circle at 78% 30%, rgba(216,166,60,.10), transparent 30%),
+    linear-gradient(90deg, rgba(216,166,60,.04) 1px, transparent 1px),
+    linear-gradient(rgba(216,166,60,.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.52));
+  background-size:auto,auto,52px 52px,52px 52px,auto;
+}
+.cta-section .cta-music-svg{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  z-index:1 !important;
+  pointer-events:none !important;
+  opacity:.36 !important;
+}
+.cta-section .cta-music-svg .grid{stroke:#d8a63c;stroke-width:1;opacity:.20;vector-effect:non-scaling-stroke}
+.cta-section .cta-music-svg .cross{stroke:#d8a63c;stroke-width:1.3;stroke-linecap:round;opacity:.48;fill:none;vector-effect:non-scaling-stroke}
+.cta-section .cta-music-svg .note{stroke:#d8a63c;stroke-width:1.5;fill:none;opacity:.45;vector-effect:non-scaling-stroke}
+.cta-section .cta-music-svg .dot{fill:#d8a63c;opacity:.5}
+.cta-section .cta-music-svg .ring{fill:none;stroke:#d8a63c;stroke-width:1;opacity:.15}
+.cta-section .cta-music-svg .wave{fill:none;stroke:#d8a63c;stroke-width:1.5;opacity:.25;stroke-dasharray:10 18;animation:ctaWave 12s linear infinite}
+@keyframes ctaWave{to{stroke-dashoffset:-336px}}
+.cta-section > .container{position:relative !important;z-index:5 !important}
+.cta-section .cta-title{font-size:clamp(5rem,9vw,9rem) !important;line-height:.88 !important;letter-spacing:-.06em !important;text-shadow:0 4px 30px rgba(0,0,0,.55) !important}
+.cta-section .cta-subtitle{font-size:20px !important;line-height:1.7 !important;max-width:760px !important}
+
+/* =========================================================
+   MOBILE HEADER — LOGIN LIVES INSIDE HAMBURGER MENU
+   ========================================================= */
+@media (max-width: 900px){
+  .site-header .desktop-nav{display:none !important;}
+  .site-header .login-btn{display:none !important;}
+  .site-header .hamburger{display:flex !important;}
+  .mobile-nav a[href="login.html"]{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:8px !important;
+    margin-top:8px !important;
+    padding:13px 18px !important;
+    border:1px solid rgba(216,166,60,.55) !important;
+    border-radius:999px !important;
+    color:#d8a63c !important;
+    background:rgba(216,166,60,.05) !important;
+  }
+}
+@media (min-width:901px){
+  .site-header .hamburger{display:none !important;}
+  .site-header .login-btn{display:flex !important;}
+}
+</style>
+
+
+<style id="stackly-footer-logo-final-fix">
+/* ===== FINAL FOOTER LOGO: GOLD ===== */
+.site-footer .footer-brand .brand-logo{
+  width:64px !important;
+  height:64px !important;
+  flex:0 0 64px !important;
+  border:1px solid #d8a63c !important;
+  border-radius:50% !important;
+  display:grid !important;
+  place-items:center !important;
+  background:rgba(216,166,60,.055) !important;
+  box-shadow:
+    0 0 26px rgba(216,166,60,.16),
+    inset 0 0 18px rgba(216,166,60,.04) !important;
+}
+.site-footer .footer-brand .brand-logo img{
+  display:block !important;
+  width:82% !important;
+  height:82% !important;
+  object-fit:contain !important;
+  opacity:1 !important;
+  filter:
+    brightness(0)
+    saturate(100%)
+    invert(69%)
+    sepia(76%)
+    saturate(950%)
+    hue-rotate(357deg)
+    brightness(104%)
+    contrast(103%) !important;
+}
+.site-footer .footer-brand .brand-text h1{
+  color:#d8a63c !important;
+}
+.site-footer .footer-brand .brand-text span{
+  color:#d8a63c !important;
+}
+</style>
+
+
+<style id="our-sound-image-visibility-fix">
+/* ===== OUR SOUND: NEVER SHOW A BLANK / IMAGE-LOADING PANEL ===== */
+.ascii-section .sound-image-panel{
+  position:relative !important;
+  overflow:hidden !important;
+  min-height:590px !important;
+  isolation:isolate !important;
+}
+.ascii-section .sound-real-image{
+  position:absolute !important;
+  inset:0 !important;
+  z-index:1 !important;
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  filter:brightness(.90) contrast(1.06) saturate(.88) !important;
+  transform:none !important;
+}
+.ascii-section .sound-image-panel::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:4 !important;
+  pointer-events:none !important;
+  background:
+    linear-gradient(90deg, rgba(5,5,8,.20), transparent 38%, rgba(5,5,8,.10)),
+    linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.34)) !important;
+}
+.ascii-section #ascii-canvas,
+.ascii-section #real-image-canvas{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  z-index:3 !important;
+  pointer-events:none !important;
+}
+@media(max-width:900px){
+  .ascii-section .sound-image-panel{
+    min-height:430px !important;
+  }
+}
+</style>
+
+
+<style id="merged-final-fixes">
+/* =========================================================
+   MERGED FINAL FIXES
+   - Precision image is a real image, independent of canvas.
+   - Canvas remains an animation layer above it.
+   - Our Sound image is always visible.
+   - Mobile login lives only inside the hamburger menu.
+   ========================================================= */
+
+/* PRECISION IMAGE */
+.dot-section .precision-image-panel{
+  position:relative !important;
+  overflow:hidden !important;
+  isolation:isolate !important;
+  background:#050508 !important;
+}
+
+.dot-section .precision-real-image{
+  position:absolute !important;
+  inset:0 !important;
+  z-index:1 !important;
+  width:100% !important;
+  height:100% !important;
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  filter:brightness(.96) contrast(1.04) saturate(.88) !important;
+  transform:none !important;
+}
+
+.dot-section #dot-canvas{
+  position:absolute !important;
+  inset:0 !important;
+  z-index:3 !important;
+  width:100% !important;
+  height:100% !important;
+  pointer-events:none !important;
+}
+
+/* Keep the decorative panel treatment without hiding the photo. */
+.dot-section .precision-image-panel::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:2 !important;
+  pointer-events:none !important;
+  background:
+    linear-gradient(90deg,rgba(5,5,8,.08),transparent 42%,rgba(5,5,8,.18)),
+    linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.30)) !important;
+}
+
+/* OUR SOUND — force its real image below the animation */
+.ascii-section .sound-image-panel{
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+}
+
+.ascii-section .sound-real-image{
+  position:absolute !important;
+  inset:0 !important;
+  z-index:1 !important;
+  width:100% !important;
+  height:100% !important;
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+}
+
+/* Any reveal animation must never hide the actual image itself. */
+.ascii-section .sound-real-image.reveal,
+.dot-section .precision-real-image.reveal{
+  opacity:1 !important;
+  visibility:visible !important;
+  transform:none !important;
+}
+
+/* Mobile: Login is already present in .mobile-nav.
+   Keep the desktop login out of the header on small screens. */
+@media(max-width:900px){
+  .site-header .login-btn{
+    display:none !important;
+  }
+
+  .mobile-nav a[href="login.html"]{
+    display:flex !important;
+    align-items:center;
+  }
+
+  .dot-section .precision-real-image{
+    object-position:center center !important;
+  }
+}
+
+/* Image fallback should never leave an empty panel. */
+img{
+  max-width:100%;
+}
+</style>
+
+
+<style id="same-reference-footer">
+.reference-footer{
+  position:relative!important;margin-top:3rem!important;
+  background:#030306!important;border-top:1px solid rgba(216,166,60,.14)!important;
+  overflow:hidden!important;color:#f5f2ea!important;
+}
+.reference-footer::before{
+  content:""!important;position:absolute!important;inset:0!important;pointer-events:none!important;
+  opacity:.14!important;
+  background-image:linear-gradient(rgba(216,166,60,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(216,166,60,.055) 1px,transparent 1px)!important;
+  background-size:54px 54px!important;
+  mask-image:linear-gradient(to bottom,black,transparent 78%)!important;
+}
+.reference-footer-container{
+  position:relative!important;z-index:2!important;max-width:1600px!important;
+  padding-left:65px!important;padding-right:65px!important;
+}
+.reference-top{
+  position:absolute!important;right:0!important;top:-24px!important;width:48px!important;height:48px!important;
+  border-radius:50%!important;display:grid!important;place-items:center!important;
+  background:#d8a63c!important;color:#050505!important;border:1px solid #f2c45f!important;
+  font-size:20px!important;z-index:5!important;cursor:pointer!important;
+}
+.reference-footer-grid{
+  display:grid!important;grid-template-columns:1.25fr .8fr .8fr 1.15fr!important;
+  column-gap:70px!important;align-items:start!important;padding:58px 0 72px!important;
+}
+.reference-brand{display:flex!important;align-items:center!important;gap:13px!important;text-decoration:none!important}
+.reference-brand .brand-logo{
+  width:58px!important;height:58px!important;min-width:58px!important;
+  border-color:#d8a63c!important;box-shadow:0 0 24px rgba(216,166,60,.14)!important;
+}
+.reference-brand .brand-text h1{
+  color:#f5f2ea!important;margin:0!important;font-size:25px!important;letter-spacing:.08em!important;
+}
+.reference-brand .brand-text span{color:#d8a63c!important}
+.reference-footer-brand p{
+  margin:20px 0 0!important;max-width:360px!important;color:rgba(245,242,234,.58)!important;
+  font-size:18px!important;line-height:1.6!important;
+}
+.reference-footer-column h4{
+  margin:0 0 28px!important;color:#e5b74e!important;
+  font-family:"Playfair Display",serif!important;font-size:16px!important;
+  text-transform:uppercase!important;letter-spacing:.08em!important;
+}
+.reference-footer-column a{
+  display:block!important;margin:0 0 18px!important;color:rgba(245,242,234,.58)!important;
+  font-size:18px!important;text-decoration:none!important;transition:color .25s ease,transform .25s ease!important;
+}
+.reference-footer-column a:hover{color:#e5b74e!important;transform:translateX(4px)!important}
+.reference-footer-subscribe h4{
+  margin:0 0 8px!important;color:#f5f2ea!important;
+  font-family:"Playfair Display",serif!important;font-size:27px!important;
+}
+.reference-footer-subscribe p{
+  margin:0 0 20px!important;color:rgba(245,242,234,.62)!important;
+  font-size:18px!important;line-height:1.55!important;
+}
+.reference-subscribe-form{display:flex!important;align-items:center!important;gap:16px!important}
+.reference-subscribe-form input{
+  width:205px!important;height:69px!important;box-sizing:border-box!important;border:0!important;
+  border-radius:9px!important;background:#f5f3ee!important;color:#222!important;
+  padding:0 24px!important;font-size:17px!important;outline:none!important;
+}
+.reference-subscribe-form button{
+  width:180px!important;height:69px!important;border:0!important;border-radius:9px!important;
+  background:#f0a000!important;color:#fff!important;font-size:17px!important;font-weight:700!important;
+  cursor:pointer!important;transition:transform .25s ease,box-shadow .25s ease!important;
+}
+.reference-subscribe-form button:hover{transform:translateY(-2px)!important;box-shadow:0 12px 30px rgba(240,160,0,.20)!important}
+.reference-footer-divider{height:1px!important;background:rgba(245,242,234,.10)!important}
+.reference-footer-bottom{
+  min-height:120px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;gap:25px!important;
+}
+.reference-copy,.reference-crafted{color:rgba(245,242,234,.40)!important;font-size:15px!important}
+.reference-socials{display:flex!important;align-items:center!important;gap:14px!important}
+.reference-socials a{
+  width:52px!important;height:52px!important;min-width:52px!important;border:1px solid rgba(216,166,60,.38)!important;
+  border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  text-decoration:none!important;color:#d8a63c!important;background:rgba(216,166,60,.035)!important;
+  font-size:18px!important;font-weight:600!important;transition:all .25s ease!important;
+}
+.reference-socials a:hover{background:#d8a63c!important;color:#050505!important;transform:translateY(-3px)!important}
+@media(max-width:1000px){
+  .reference-footer-container{padding-left:35px!important;padding-right:35px!important}
+  .reference-footer-grid{grid-template-columns:1fr 1fr!important;gap:45px 50px!important}
+}
+@media(max-width:600px){
+  .reference-footer-container{padding-left:20px!important;padding-right:20px!important}
+  .reference-footer-grid{display:flex!important;flex-direction:column!important;gap:30px!important;padding:55px 0 35px!important}
+  .reference-footer-column{width:100%!important;text-align:center!important}
+  .reference-footer-column h4{font-size:12px!important;margin-bottom:20px!important}
+  .reference-footer-column a{font-size:13px!important;margin-bottom:12px!important}
+  .reference-footer-subscribe{width:100%!important;text-align:center!important}
+  .reference-footer-subscribe h4{font-size:20px!important}
+  .reference-footer-subscribe p{font-size:13px!important}
+  .reference-subscribe-form{flex-direction:row!important;gap:10px!important}
+  .reference-subscribe-form input{width:auto!important;flex:1!important;height:48px!important;font-size:13px!important}
+  .reference-subscribe-form button{width:105px!important;height:48px!important;font-size:13px!important}
+  .reference-footer-bottom{flex-direction:column!important;justify-content:center!important;padding:24px 0!important;gap:15px!important;text-align:center!important}
+  .reference-copy,.reference-crafted{font-size:11px!important}
+  .reference-socials{gap:8px!important}
+  .reference-socials a{width:34px!important;height:34px!important;min-width:34px!important;font-size:12px!important}
+  .reference-top{width:40px!important;height:40px!important;right:8px!important;top:-20px!important;font-size:16px!important}
+}
+</style>
+
+</head>
+<body class="bg-home">
+  <!-- Particles -->
+  <div class="particles"></div>
+
+  <!-- Custom Cursor -->
+  <div class="custom-cursor"></div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <a href="index.html" class="brand">
+      <div class="brand-logo"><img src="assets/logo.webp" alt="Stackly Music logo" class="stackly-gold-logo" style="width:70%;height:70%;object-fit:contain;display:block;"></div>
+      <div class="brand-text">
+        <h1>STACKLY</h1>
+        <span>FEEL THE MUSIC</span>
+      </div>
+    </a>
+
+    <nav class="desktop-nav">
+      <a href="index.html" class="active">Home</a>
+      <a href="about.html">About</a>
+      <a href="service.html">Service</a>
+      <a href="blog.html">Blog</a>
+      <a href="instrument.html">Instrument</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <a href="login.html" class="login-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Login
+    </a>
+
+    <div class="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="service.html">Service</a>
+    <a href="blog.html">Blog</a>
+    <a href="instrument.html">Instrument</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html">Login</a>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+
+    <!-- Subtle dynamic instrument-colored cross-grid SVG -->
+    <div class="hero-cross-grid" aria-hidden="true">
+      <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
+        <defs>
+          <pattern id="crossGridPattern" width="52" height="52" patternUnits="userSpaceOnUse">
+            <path class="grid-line main" d="M0 0H52 M0 0V52"/>
+            <path class="grid-cross" d="M22 26H30 M26 22V30"/>
+          </pattern>
+
+          <linearGradient id="gridSweep" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="var(--grid-color)" stop-opacity="0"/>
+            <stop offset=".5" stop-color="var(--grid-color)" stop-opacity=".8"/>
+            <stop offset="1" stop-color="var(--grid-color)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <g>
+          <rect width="1600" height="900" fill="url(#crossGridPattern)" class="grid-move"/>
+          <g class="grid-pulse">
+            <path class="grid-cross" d="M0 220H1600 M0 670H1600"/>
+            <path class="grid-cross" d="M320 0V900 M1280 0V900"/>
+          </g>
+          <rect class="grid-sweep" x="-650" y="0" width="650" height="900"/>
+        </g>
+      </svg>
+    </div>
+    <div class="container" style="position:relative; z-index:2;">
+      <div class="hero-grid">
+        <!-- Instrument Selector -->
+        <div class="instrument-selector">
+          <div class="instrument-card active" data-instrument="guitar" data-hero-bg="assets/hero-guitar-bg.webp">
+            <img src="assets/guitar.webp" alt="Electric Guitar" loading="lazy">
+            <div class="instrument-card-content">
+              <div class="instrument-card-icon"><svg class="instrument-svg-icon" viewBox="0 0 48 48" aria-hidden="true">
+  <path d="M31.7 7.2c2.8-2.8 5.9-4.2 9.1-4.2l4.2 4.2c0 3.2-1.4 6.3-4.2 9.1l-4.1-4.1-8.3 8.3 2.6 2.6-4.1 4.1-2.6-2.6-8.8 8.8c-1.8 1.8-4.8 1.8-6.6 0l-1.4-1.4c-1.8-1.8-1.8-4.8 0-6.6l8.8-8.8-2.6-2.6 4.1-4.1 2.6 2.6 8.3-8.3 4.1 4.1 1.5-1.5 0.9.9z"/>
+  <circle cx="12.2" cy="31.8" r="2.2"/>
+  <path d="M35 10l3 3" />
+</svg></div>
+              <div>
+                <div class="instrument-card-title">Electric Guitar</div>
+                <div class="instrument-card-sub">String</div>
+              </div>
+            </div>
+          </div>
+          <div class="instrument-card" data-instrument="piano" data-hero-bg="assets/hero-piano-bg.webp">
+            <img src="assets/piano.webp" alt="Grand Piano" loading="lazy">
+            <div class="instrument-card-content">
+              <div class="instrument-card-icon"><svg class="instrument-svg-icon" viewBox="0 0 48 48" aria-hidden="true">
+  <rect x="6" y="9" width="36" height="30" rx="2.5"/>
+  <path d="M12 10v28M18 10v28M24 10v28M30 10v28M36 10v28"/>
+  <path class="piano-key-black" d="M10 10h4v15h-4zM16 10h4v15h-4zM28 10h4v15h-4zM34 10h4v15h-4z"/>
+  <path d="M6 27h36"/>
+</svg></div>
+              <div>
+                <div class="instrument-card-title">Piano</div>
+                <div class="instrument-card-sub">Keyboard</div>
+              </div>
+            </div>
+          </div>
+          <div class="instrument-card" data-instrument="drums" data-hero-bg="assets/hero-drums-bg.webp">
+            <img src="assets/drum.webp" alt="Drum Kit" loading="lazy">
+            <div class="instrument-card-content">
+              <div class="instrument-card-icon"><svg class="instrument-svg-icon" viewBox="0 0 48 48" aria-hidden="true">
+  <path d="M9 19c0-5.5 6.7-9 15-9s15 3.5 15 9-6.7 9-15 9S9 24.5 9 19z"/>
+  <path d="M9 19v10c0 5.5 6.7 9 15 9s15-3.5 15-9V19"/>
+  <path d="M17 28v10M31 28v10M13 39h8M27 39h8"/>
+  <path d="M5 14l9 4M43 14l-9 4M6 8l9 7M42 8l-9 7"/>
+  <circle cx="24" cy="19" r="2.2"/>
+</svg></div>
+              <div>
+                <div class="instrument-card-title">Drums</div>
+                <div class="instrument-card-sub">Percussion</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+          <div class="section-label">Play Your Dream</div>
+          <h1 class="hero-title">
+            <span class="line-1">Electric</span>
+            <span class="line-2">Guitar</span>
+          </h1>
+          <p class="hero-description">Experience the perfect blend of craftsmanship, tone, and performance. Our electric guitars are designed to inspire creativity and made for musicians who dare to stand out.</p>
+
+          <div class="hero-features">
+            <div class="hero-feature">
+              <div class="hero-feature-icon">&#9834;</div>
+              <span>Rich Tone</span>
+            </div>
+            <div class="hero-feature">
+              <div class="hero-feature-icon">&#9851;</div>
+              <span>Durable Build</span>
+            </div>
+            <div class="hero-feature">
+              <div class="hero-feature-icon">&#10022;</div>
+              <span>Premium Design</span>
+            </div>
+            <div class="hero-feature">
+              <div class="hero-feature-icon">&#9733;</div>
+              <span>Perfect Finish</span>
+            </div>
+          </div>
+
+          <a href="instrument.html" class="btn-gold">
+            Explore Collection
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="hero-image-container">
+      <img src="assets/guitar.webp" alt="Electric Guitar" class="hero-main-image" fetchpriority="high">
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+
+    <!-- Waveform -->
+    <div class="waveform">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,60 C240,120 480,0 720,60 C960,120 1200,0 1440,60 L1440,120 L0,120Z" fill="rgba(216,166,60,0.05)"/>
+        <path d="M0,80 C360,20 720,100 1080,40 C1260,10 1350,60 1440,40" stroke="rgba(216,166,60,0.15)" stroke-width="1" fill="none"/>
+        <path d="M0,50 C200,90 400,30 600,70 C800,110 1000,20 1200,60 C1320,80 1380,40 1440,50" stroke="rgba(75,21,95,0.3)" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SECTION 2: 3D Tilt Cards -->
+  <section class="tilt-section">
+    
+<!-- HERO-MATCHING SVG ATMOSPHERE -->
+<svg class="showcase-svg-bg" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <pattern id="showcaseCrossPattern" width="52" height="52" patternUnits="userSpaceOnUse">
+      <path class="showcase-grid-line" d="M0 0H52 M0 0V52"/>
+      <path class="showcase-cross" d="M22 26H30 M26 22V30"/>
+    </pattern>
+
+    <linearGradient id="showcaseGoldSweep" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d8a63c" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#d8a63c" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#d8a63c" stop-opacity="0"/>
+    </linearGradient>
+
+    <radialGradient id="showcaseRingGlow">
+      <stop offset="0" stop-color="#d8a63c" stop-opacity=".20"/>
+      <stop offset=".65" stop-color="#d8a63c" stop-opacity=".04"/>
+      <stop offset="1" stop-color="#d8a63c" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#showcaseCrossPattern)"/>
+
+  <!-- Hero-style long guide lines -->
+  <path class="showcase-cross" d="M0 170H1600 M0 735H1600"/>
+  <path class="showcase-cross" d="M270 0V900 M1330 0V900"/>
+
+  <!-- Subtle concentric music/target rings -->
+  <circle cx="1310" cy="235" r="150" fill="url(#showcaseRingGlow)" class="showcase-pulse"/>
+  <circle cx="1310" cy="235" r="86" class="showcase-glow"/>
+  <circle cx="1310" cy="235" r="112" class="showcase-glow soft"/>
+
+  <!-- Moving hero-like sweep -->
+  <rect class="showcase-sweep" x="-500" y="0" width="500" height="900"/>
+</svg>
+
+<div class="showcase-vignette" aria-hidden="true"></div>
+
+<!-- Decorative musical SVG -->
+<svg class="showcase-music-art" viewBox="0 0 300 180" aria-hidden="true">
+  <!-- staff -->
+  <line x1="20" y1="54" x2="285" y2="54"/>
+  <line x1="20" y1="70" x2="285" y2="70"/>
+  <line x1="20" y1="86" x2="285" y2="86"/>
+  <line x1="20" y1="102" x2="285" y2="102"/>
+  <line x1="20" y1="118" x2="285" y2="118"/>
+
+  <!-- flowing waveform -->
+  <path d="M20 137 C55 116, 72 151, 105 130 S157 106, 188 132 S238 153, 285 124"/>
+
+  <!-- musical notes -->
+  <path d="M72 84V30 L104 22V76"/>
+  <circle class="note-fill" cx="61" cy="88" r="8"/>
+  <circle class="note-fill" cx="93" cy="78" r="8"/>
+
+  <path d="M170 108V62 L201 54V100"/>
+  <circle class="note-fill" cx="159" cy="112" r="8"/>
+  <circle class="note-fill" cx="190" cy="102" r="8"/>
+
+  <!-- tiny floating notes -->
+  <path d="M244 34V18"/>
+  <circle class="note-fill" cx="239" cy="36" r="5"/>
+  <path d="M270 152V137"/>
+  <circle class="note-fill" cx="265" cy="154" r="5"/>
+</svg>
+
+<div class="showcase-corner tl" aria-hidden="true"></div>
+<div class="showcase-corner br" aria-hidden="true"></div>
+
+    <div class="container">
+      <div class="section-label reveal">Instrument Showcase</div>
+      <h2 class="reveal reveal-delay-1" style="font-size:clamp(2rem,4vw,3.5rem); margin-bottom:3rem;">
+        <span style="color:var(--white);">Discover</span>
+        <span style="background:linear-gradient(135deg,var(--gold),var(--light-gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Perfection</span>
+      </h2>
+
+      <div class="tilt-grid">
+        <div class="tilt-card reveal reveal-delay-1">
+          <div class="tilt-card-glow"></div>
+          <img src="assets/img.webp" alt="Electric Guitar" loading="lazy">
+          <div class="tilt-card-content">
+            <h3 class="tilt-card-title">Electric Guitar</h3>
+            <p class="tilt-card-desc">Precision-crafted for the modern musician. Unmatched sustain and clarity.</p>
+          </div>
+        </div>
+        <div class="tilt-card reveal reveal-delay-2">
+          <div class="tilt-card-glow"></div>
+          <img src="assets/img2.webp" alt="Grand Piano" loading="lazy">
+          <div class="tilt-card-content">
+            <h3 class="tilt-card-title">Grand Piano</h3>
+            <p class="tilt-card-desc">Concert hall resonance in an elegant form. Pure acoustic brilliance.</p>
+          </div>
+        </div>
+        <div class="tilt-card reveal reveal-delay-3">
+          <div class="tilt-card-glow"></div>
+          <img src="assets/img3.webp" alt="Drum Kit" loading="lazy">
+          <div class="tilt-card-content">
+            <h3 class="tilt-card-title">Drum Kit</h3>
+            <p class="tilt-card-desc">Thunderous lows and crisp highs. The heartbeat of every performance.</p>
+          </div>
+        </div>
+        <div class="tilt-card reveal reveal-delay-1">
+          <div class="tilt-card-glow"></div>
+          <img src="assets/img4.webp" alt="Violin" loading="lazy">
+          <div class="tilt-card-content">
+            <h3 class="tilt-card-title">Violin</h3>
+            <p class="tilt-card-desc">Centuries of craftsmanship in every curve. Singing sustain and warmth.</p>
+          </div>
+        </div>
+        <div class="tilt-card reveal reveal-delay-2">
+          <div class="tilt-card-glow"></div>
+          <img src="assets/img5.webp" alt="Saxophone" loading="lazy">
+          <div class="tilt-card-content">
+            <h3 class="tilt-card-title">Saxophone</h3>
+            <p class="tilt-card-desc">Brass brilliance with soulful expression. The voice of jazz and beyond.</p>
+          </div>
+        </div>
+        <div class="tilt-card reveal reveal-delay-3">
+          <div class="tilt-card-glow"></div>
+          <img src="assets/img6.webp" alt="Bass Guitar" loading="lazy">
+          <div class="tilt-card-content">
+            <h3 class="tilt-card-title">Bass Guitar</h3>
+            <p class="tilt-card-desc">Deep, resonant foundation. The groove that moves every audience.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: ASCII Reveal -->
+  <section class="ascii-section">
+
+<!-- Musical SVG atmosphere — OUR SOUND -->
+<svg class="music-section-svg" viewBox="0 0 1600 900"
+     preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <pattern id="soundCrossGrid" width="52" height="52" patternUnits="userSpaceOnUse">
+      <path d="M0 0H52 M0 0V52" stroke="#d8a63c" stroke-width="1" opacity=".20"/>
+      <path d="M22 26H30 M26 22V30"
+            stroke="#d8a63c" stroke-width="1.3"
+            stroke-linecap="round" opacity=".48"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#soundCrossGrid)"/>
+
+  <!-- Large music waveform -->
+  <path class="music-wave-strong music-animated-wave"
+        d="M-80 700
+           C20 610 70 790 160 700
+           S300 610 390 700
+           S530 790 620 700
+           S760 610 850 700
+           S990 790 1080 700
+           S1220 610 1310 700
+           S1450 790 1680 650"/>
+
+  <path class="music-wave"
+        d="M-80 735
+           C20 660 70 800 160 735
+           S300 670 390 735
+           S530 800 620 735
+           S760 670 850 735
+           S990 800 1080 735
+           S1220 670 1310 735
+           S1450 800 1680 690"/>
+
+  <!-- Musical notes -->
+  <g class="music-note">
+    <path d="M1190 155V255"/>
+    <path d="M1190 155L1250 138V238"/>
+    <ellipse cx="1175" cy="260" rx="17" ry="10"/>
+    <ellipse cx="1235" cy="243" rx="17" ry="10"/>
+  </g>
+
+  <g class="music-note">
+    <path d="M1380 390V475"/>
+    <path d="M1380 390L1432 377V462"/>
+    <ellipse cx="1366" cy="480" rx="15" ry="9"/>
+    <ellipse cx="1418" cy="467" rx="15" ry="9"/>
+  </g>
+
+  <g class="music-note">
+    <path d="M250 590V665"/>
+    <path d="M250 590L292 579V652"/>
+    <ellipse cx="238" cy="674" rx="14" ry="8"/>
+    <ellipse cx="280" cy="660" rx="14" ry="8"/>
+  </g>
+
+  <!-- Hero-style rings -->
+  <circle class="music-ring" cx="1280" cy="220" r="115"/>
+  <circle class="music-ring" cx="1280" cy="220" r="155"/>
+  <circle class="music-ring" cx="1280" cy="220" r="195"/>
+
+  <!-- Tiny gold notes -->
+  <g class="music-note-fill">
+    <circle cx="1080" cy="590" r="4"/>
+    <path d="M1083 590V565L1100 560V582Z"/>
+    <circle cx="1460" cy="650" r="4"/>
+    <path d="M1463 650V625L1480 620V642Z"/>
+    <circle cx="460" cy="190" r="4"/>
+    <path d="M463 190V165L480 160V182Z"/>
+  </g>
+</svg>
+
+    
+<!-- HERO-MATCHING SVG BACKGROUND FOR DIGITAL ART -->
+<svg class="digital-art-svg-bg" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <pattern id="digitalCrossPattern" width="52" height="52" patternUnits="userSpaceOnUse">
+      <path class="digital-grid-line" d="M0 0H52 M0 0V52"/>
+      <path class="digital-cross" d="M22 26H30 M26 22V30"/>
+    </pattern>
+
+    <linearGradient id="digitalGoldSweep" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d8a63c" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#d8a63c" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#d8a63c" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#digitalCrossPattern)"/>
+
+  <path class="digital-cross" d="M0 190H1600 M0 720H1600"/>
+  <path class="digital-cross" d="M310 0V900 M1320 0V900"/>
+
+  <circle class="digital-ring" cx="1220" cy="220" r="125"/>
+  <circle class="digital-ring" cx="1220" cy="220" r="165"/>
+  <circle class="digital-ring" cx="1220" cy="220" r="205"/>
+
+  <rect class="digital-sweep" x="-500" y="0" width="500" height="900"/>
+</svg>
+
+<div class="digital-art-dot one" aria-hidden="true"></div>
+<div class="digital-art-dot two" aria-hidden="true"></div>
+<div class="digital-art-dot three" aria-hidden="true"></div>
+<div class="digital-art-dot four" aria-hidden="true"></div>
+
+    <div class="container">
+      <div class="ascii-container">
+        <div>
+          <div class="section-label reveal">OUR SOUND</div>
+          <h2 class="reveal reveal-delay-1" style="font-size:clamp(2rem,4vw,3.5rem); margin-bottom:1.5rem;">
+            The Art of<br><span style="background:linear-gradient(135deg,var(--gold),var(--light-gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Sound</span>
+          </h2>
+          <p class="reveal reveal-delay-2" style="color:rgba(245,242,234,0.6); max-width:400px; line-height:1.7;">
+            Every instrument tells a story through its curves, materials, and acoustic properties. We transform raw materials into vessels of musical expression.
+          </p>
+        </div>
+        <div class="ascii-canvas-wrapper reveal reveal-delay-2 sound-image-panel">
+          <img
+            class="sound-real-image"
+            src="assets/guitar.webp"
+            alt="Premium electric guitar"
+            loading="eager"
+            decoding="async"
+            onerror="this.onerror=null;this.src='assets/img2.webp';"
+          >
+          <canvas id="ascii-canvas" aria-hidden="true"></canvas>
+          <canvas id="real-image-canvas" aria-hidden="true"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: Dot Reveal -->
+  <section class="dot-section">
+    
+<!-- HERO-MATCHING SVG BACKGROUND FOR PRECISION -->
+<svg class="precision-svg-bg" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <pattern id="precisionCrossPattern" width="52" height="52" patternUnits="userSpaceOnUse">
+      <path class="precision-grid" d="M0 0H52 M0 0V52"/>
+      <path class="precision-cross" d="M22 26H30 M26 22V30"/>
+    </pattern>
+
+    <linearGradient id="precisionGoldSweep" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d8a63c" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#d8a63c" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#d8a63c" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#precisionCrossPattern)"/>
+
+  <path class="precision-cross" d="M0 180H1600 M0 730H1600"/>
+  <path class="precision-cross" d="M290 0V900 M1325 0V900"/>
+
+  <circle class="precision-ring" cx="1290" cy="225" r="125"/>
+  <circle class="precision-ring" cx="1290" cy="225" r="165"/>
+  <circle class="precision-ring" cx="1290" cy="225" r="205"/>
+
+  <rect class="precision-sweep" x="-500" y="0" width="500" height="900"/>
+</svg>
+
+<div class="precision-dot one" aria-hidden="true"></div>
+<div class="precision-dot two" aria-hidden="true"></div>
+<div class="precision-dot three" aria-hidden="true"></div>
+<div class="precision-dot four" aria-hidden="true"></div>
+
+    <div class="container">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;">
+        <div class="dot-container reveal precision-image-panel">
+          <img
+            class="precision-real-image"
+            src="assets/img8.webp"
+            alt="Premium piano"
+            loading="eager"
+            decoding="async"
+            onerror="this.onerror=null;this.src='assets/piano.webp';"
+          >
+          <canvas id="dot-canvas" aria-hidden="true"></canvas>
+        </div>
+        <div>
+          <div class="section-label reveal">Precision</div>
+          <h2 class="reveal reveal-delay-1" style="font-size:clamp(2rem,4vw,3.5rem); margin-bottom:1.5rem;">
+            Crafted for<br><span style="background:linear-gradient(135deg,var(--gold),var(--light-gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Performers</span>
+          </h2>
+          <p class="reveal reveal-delay-2" style="color:rgba(245,242,234,0.6); max-width:400px; line-height:1.7;">
+            Each instrument is assembled from thousands of precise components, calibrated to deliver flawless performance under the most demanding stage conditions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: Coverflow Gallery -->
+  <section class="coverflow-section">
+    <div class="gallery-crosses" aria-hidden="true"></div>
+
+    <svg class="gallery-svg-details" viewBox="0 0 1600 900" preserveAspectRatio="none"
+         style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.22;"
+         aria-hidden="true">
+      <path d="M0 170H1600 M0 730H1600" stroke="#d8a63c" stroke-width="1" fill="none"/>
+      <path d="M280 0V900 M1320 0V900" stroke="#d8a63c" stroke-width="1" fill="none"/>
+      <circle cx="1280" cy="230" r="125" fill="none" stroke="#d8a63c" stroke-width="1"/>
+      <circle cx="1280" cy="230" r="165" fill="none" stroke="#d8a63c" stroke-width="1" opacity=".5"/>
+    </svg>
+
+    <div class="container">
+      <div class="section-label reveal" style="justify-content:center;">Gallery</div>
+      <h2 class="reveal reveal-delay-1" style="font-size:clamp(2rem,4vw,3.5rem); text-align:center; margin-bottom:3rem;">
+        <span style="color:var(--white);">The</span>
+        <span style="background:linear-gradient(135deg,var(--gold),var(--light-gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Collection</span>
+      </h2>
+
+      <div class="coverflow-wrapper">
+        <div class="coverflow-track">
+          <div class="coverflow-item">
+            <img src="assets/img5.webp" alt="Guitar" loading="lazy">
+          </div>
+          <div class="coverflow-item">
+            <img src="assets/img6.webp" alt="Piano" loading="lazy">
+          </div>
+          <div class="coverflow-item active">
+            <img src="assets/drum.webp" alt="Drums" loading="lazy">
+          </div>
+          <div class="coverflow-item">
+            <img src="assets/img8.webp" alt="Bass" loading="lazy">
+          </div>
+          <div class="coverflow-item">
+            <img src="assets/img2.webp" alt="Violin" loading="lazy">
+          </div>
+          <div class="coverflow-item">
+            <img src="assets/img9.webp" alt="Saxophone" loading="lazy">
+          </div>
+        </div>
+      </div>
+
+      <div class="coverflow-controls">
+        <button class="coverflow-btn coverflow-prev" aria-label="Previous">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="coverflow-btn coverflow-next" aria-label="Next">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: Floating Glass Cards -->
+  <section class="floating-section">
+
+<!-- Musical SVG atmosphere — OUR PRINCIPLES -->
+<svg class="music-section-svg" viewBox="0 0 1600 900"
+     preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <pattern id="principlesMusicGrid" width="52" height="52" patternUnits="userSpaceOnUse">
+      <path d="M0 0H52 M0 0V52" stroke="#d8a63c" stroke-width="1" opacity=".20"/>
+      <path d="M22 26H30 M26 22V30"
+            stroke="#d8a63c" stroke-width="1.3"
+            stroke-linecap="round" opacity=".48"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#principlesMusicGrid)"/>
+
+  <!-- Musical staff -->
+  <g class="music-wave" opacity=".25">
+    <path d="M60 165H1540"/>
+    <path d="M60 185H1540"/>
+    <path d="M60 205H1540"/>
+    <path d="M60 225H1540"/>
+    <path d="M60 245H1540"/>
+  </g>
+
+  <!-- Floating notes around the principles cards -->
+  <g class="music-note">
+    <path d="M210 125V290"/>
+    <path d="M210 125L285 108V273"/>
+    <ellipse cx="192" cy="303" rx="20" ry="12"/>
+    <ellipse cx="267" cy="286" rx="20" ry="12"/>
+  </g>
+
+  <g class="music-note">
+    <path d="M1360 515V670"/>
+    <path d="M1360 515L1428 500V650"/>
+    <ellipse cx="1344" cy="682" rx="18" ry="11"/>
+    <ellipse cx="1411" cy="665" rx="18" ry="11"/>
+  </g>
+
+  <g class="music-note-fill">
+    <circle cx="380" cy="700" r="5"/>
+    <path d="M384 700V665L405 660V691Z"/>
+
+    <circle cx="1240" cy="730" r="5"/>
+    <path d="M1244 730V695L1265 690V721Z"/>
+
+    <circle cx="1510" cy="330" r="4"/>
+    <path d="M1513 330V305L1530 300V323Z"/>
+  </g>
+
+  <!-- Large subtle record/ripple circles -->
+  <circle class="music-ring" cx="800" cy="455" r="240"/>
+  <circle class="music-ring" cx="800" cy="455" r="290"/>
+  <circle class="music-ring" cx="800" cy="455" r="340"/>
+
+  <!-- Bottom waveform -->
+  <path class="music-wave-strong music-animated-wave"
+        d="M-50 785
+           C80 690 125 880 250 785
+           S420 690 550 785
+           S720 880 850 785
+           S1020 690 1150 785
+           S1320 880 1650 760"/>
+</svg>
+
+    <div class="container">
+      <div class="section-label reveal" style="text-align:center; justify-content:center;">Philosophy</div>
+      <h2 class="reveal reveal-delay-1" style="font-size:clamp(2rem,4vw,3.5rem); text-align:center; margin-bottom:4rem;">
+        <span style="color:var(--white);">Our</span>
+        <span style="background:linear-gradient(135deg,var(--gold),var(--light-gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Principles</span>
+      </h2>
+
+      <div class="floating-grid">
+        <div class="float-card reveal">
+          <div class="float-card-icon">&#9733;</div>
+          <h3>Precision</h3>
+          <p>Every measurement matters. Tolerances within thousandths of an inch ensure perfect intonation.</p>
+        </div>
+        <div class="float-card reveal reveal-delay-1">
+          <div class="float-card-icon">&#9824;</div>
+          <h3>Craftsmanship</h3>
+          <p>Master luthiers with decades of experience shape each instrument by hand and eye.</p>
+        </div>
+        <div class="float-card reveal reveal-delay-2">
+          <div class="float-card-icon">&#9889;</div>
+          <h3>Innovation</h3>
+          <p>We pioneer new materials and techniques while honoring centuries of tradition.</p>
+        </div>
+        <div class="float-card reveal reveal-delay-3">
+          <div class="float-card-icon">&#127925;</div>
+          <h3>Performance</h3>
+          <p>Stage-tested and studio-ready. Every instrument must exceed professional demands.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 8: Bento Grid -->
+  <section class="bento-section">
+    <div class="container">
+      <div class="section-label reveal">Collection</div>
+      <h2 class="reveal reveal-delay-1" style="font-size:clamp(2rem,4vw,3.5rem); margin-bottom:3rem;">
+        <span style="color:var(--white);">Premium</span>
+        <span style="background:linear-gradient(135deg,var(--gold),var(--light-gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Selection</span>
+      </h2>
+
+      <div class="bento-grid">
+        <div class="bento-item reveal">
+          <img src="assets/img2.webp" alt="Electric Guitar" loading="lazy">
+          <div class="bento-item-content">
+            <div class="bento-item-category">Featured</div>
+            <h3 class="bento-item-title">Electric Guitar</h3>
+            <a href="instrument.html" class="bento-item-btn">View Details &rarr;</a>
+          </div>
+        </div>
+        <div class="bento-item reveal reveal-delay-1">
+          <img src="assets/img3.webp" alt="Grand Piano" loading="lazy">
+          <div class="bento-item-content">
+            <div class="bento-item-category">Keyboard</div>
+            <h3 class="bento-item-title">Grand Piano</h3>
+            <a href="instrument.html" class="bento-item-btn">View Details &rarr;</a>
+          </div>
+        </div>
+        <div class="bento-item reveal reveal-delay-2">
+          <img src="assets/drum.webp" alt="Drum Kit" loading="lazy">
+          <div class="bento-item-content">
+            <div class="bento-item-category">Percussion</div>
+            <h3 class="bento-item-title">Drum Kit</h3>
+            <a href="instrument.html" class="bento-item-btn">View Details &rarr;</a>
+          </div>
+        </div>
+        <div class="bento-item reveal reveal-delay-1">
+          <img src="assets/img5.webp" alt="Bass Guitar" loading="lazy">
+          <div class="bento-item-content">
+            <div class="bento-item-category">String</div>
+            <h3 class="bento-item-title">Bass Guitar</h3>
+            <a href="instrument.html" class="bento-item-btn">View Details &rarr;</a>
+          </div>
+        </div>
+  </section>
+
+  <!-- SECTION 9: Final CTA -->
+  <section class="cta-section">
+<!-- Musical SVG atmosphere for FIND YOUR SOUND -->
+<svg class="cta-music-svg" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <pattern id="ctaGridMusic" width="52" height="52" patternUnits="userSpaceOnUse">
+      <path class="grid" d="M0 0H52 M0 0V52"/>
+      <path class="cross" d="M22 26H30 M26 22V30"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#ctaGridMusic)"/>
+  <path class="cross" d="M0 175H1600 M0 735H1600"/>
+  <path class="cross" d="M300 0V900 M1320 0V900"/>
+  <circle class="ring" cx="800" cy="420" r="185"/>
+  <circle class="ring" cx="800" cy="420" r="245"/>
+  <circle class="ring" cx="800" cy="420" r="305"/>
+  <path class="wave" d="M-60 690 C60 600 100 780 220 690 S380 600 500 690 S660 780 780 690 S940 600 1060 690 S1220 780 1340 690 S1500 600 1660 690"/>
+  <g class="note">
+    <path d="M260 190V300 M260 190L320 176V286"/>
+    <ellipse cx="245" cy="315" rx="16" ry="10"/>
+    <ellipse cx="305" cy="300" rx="16" ry="10"/>
+    <path d="M1320 185V295 M1320 185L1380 171V281"/>
+    <ellipse cx="1305" cy="310" rx="16" ry="10"/>
+    <ellipse cx="1365" cy="295" rx="16" ry="10"/>
+  </g>
+  <g class="dot">
+    <circle cx="170" cy="420" r="4"/><circle cx="1440" cy="420" r="4"/>
+    <circle cx="430" cy="710" r="4"/><circle cx="1170" cy="710" r="4"/>
+  </g>
+</svg>
+
+    <div class="container" style="position:relative; z-index:1;">
+      <h2 class="cta-title reveal">
+        <span style="color:var(--white);">Find Your</span><br>
+        <span class="line-2">Sound</span>
+      </h2>
+      <p class="cta-subtitle reveal reveal-delay-1">
+        Every musician deserves an instrument that feels like an extension of themselves. Discover yours today.
+      </p>
+      <a href="instrument.html" class="btn-gold reveal reveal-delay-2">
+        Explore Instruments
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="waveform" style="opacity:0.15;">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,60 C360,0 720,120 1080,60 C1260,30 1350,80 1440,60 L1440,120 L0,120Z" fill="rgba(216,166,60,0.1)"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Premium Footer -->
+<footer class="site-footer reference-footer">
+  <div class="container reference-footer-container">
+    <button class="footer-top-button reference-top" type="button" aria-label="Back to top">↑</button>
+
+    <div class="reference-footer-grid">
+      <div class="reference-footer-brand">
+        <a href="index.html" class="brand reference-brand">
+          <div class="brand-logo">
+            <img src="assets/logo.webp" alt="Stackly Music logo" class="stackly-gold-logo">
+          </div>
+          <div class="brand-text">
+            <h1>STACKLY</h1>
+            <span>Feel The Music</span>
+          </div>
+        </a>
+        <p>
+          Premium musical instruments crafted for<br>
+          musicians who demand character, precision<br>
+          and unforgettable sound.
+        </p>
+      </div>
+
+      <div class="reference-footer-column">
+        <h4>Information</h4>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+        <a href="service.html">Service</a>
+        <a href="contact.html">Contact</a>
+        <a href="instrument.html">Instrument</a>
+      </div>
+
+      <div class="reference-footer-column">
+        <h4>Helpful Links</h4>
+        <a href="service.html">Services</a>
+        <a href="contact.html">Support</a>
+        <a href="404.html">Terms &amp; Condition</a>
+        <a href="404.html">Privacy Policy</a>
+        <a href="login.html">Account</a>
+      </div>
+
+      <div class="reference-footer-subscribe">
+        <h4>Subscribe More Info</h4>
+        <p>
+          Get new instrument drops, music stories<br>
+          and collection updates.
+        </p>
+        <form action="404.html" method="get" class="reference-subscribe-form">
+          <input type="email" name="email" placeholder="Enter your Email" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="reference-footer-divider"></div>
+
+    <div class="reference-footer-bottom">
+      <span class="reference-copy">&copy; 2026 STACKLY MUSIC. All rights reserved.</span>
+      <div class="reference-socials">
+        <a href="404.html" aria-label="Facebook">f</a>
+        <a href="404.html" aria-label="Google Plus">G+</a>
+        <a href="404.html" aria-label="Like">♥</a>
+        <a href="404.html" aria-label="Instagram">◎</a>
+      </div>
+      <span class="reference-crafted">Crafted for the love of sound.</span>
+    </div>
+  </div>
+</footer>
+
+  
+<script id="timeline-wheel-guard">
+(function(){
+  const timelineSelector = '.timeline-section';
+
+  window.addEventListener('wheel', function(event){
+    const timeline = event.target && event.target.closest
+      ? event.target.closest(timelineSelector)
+      : null;
+
+    if (!timeline) return;
+
+    /*
+      Important:
+      - DO NOT preventDefault().
+      - Stop scripts that try to hijack the wheel.
+      - Browser keeps its normal vertical page scrolling.
+    */
+    event.stopImmediatePropagation();
+  }, {capture:true, passive:true});
+
+  window.addEventListener('touchmove', function(event){
+    const timeline = event.target && event.target.closest
+      ? event.target.closest(timelineSelector)
+      : null;
+
+    if (!timeline) return;
+
+    event.stopImmediatePropagation();
+  }, {capture:true, passive:true});
+})();
+</script>
+
+<script src="js/main.js"></script>
+
+<script>
+(function () {
+  const hero = document.querySelector('.hero-section');
+  const cards = document.querySelectorAll('.instrument-card[data-instrument]');
+
+  if (!hero || !cards.length) return;
+
+  const themes = {
+    guitar: {
+      bg: 'assets/hero-guitar-bg.webp',
+      className: 'instrument-guitar',
+      gridColor: '#d8a63c'
+    },
+    piano: {
+      bg: 'assets/hero-piano-bg.webp',
+      className: 'instrument-piano',
+      gridColor: '#315b91'
+    },
+    drums: {
+      bg: 'assets/hero-drums-bg.webp',
+      className: 'instrument-drums',
+      gridColor: '#a45be6'
+    }
+  };
+
+  function applyInstrumentTheme(name) {
+    const theme = themes[name] || themes.guitar;
+    hero.classList.remove('instrument-guitar', 'instrument-piano', 'instrument-drums');
+    hero.classList.add(theme.className);
+    hero.style.setProperty('--hero-bg-image', 'url("' + theme.bg + '")');
+    hero.style.setProperty('--grid-color', theme.gridColor);
+    hero.style.setProperty('--instrument-color', theme.gridColor);
+
+    // Keep the SVG grid, glow and atmosphere synchronized with the selected instrument.
+    const rgb = theme.gridColor
+      .replace('#','')
+      .match(/.{2}/g)
+      .map(v => parseInt(v, 16))
+      .join(',');
+    hero.style.setProperty('--grid-rgb', rgb);
+
+    cards.forEach(card => {
+      card.classList.toggle('active', card.dataset.instrument === name);
+    });
+  }
+
+  // Capture clicks so the background changes immediately when an instrument is selected.
+  document.addEventListener('click', function (event) {
+    const card = event.target.closest('.instrument-card[data-instrument]');
+    if (!card) return;
+    applyInstrumentTheme(card.dataset.instrument);
+  }, true);
+
+  const activeCard = document.querySelector('.instrument-card.active[data-instrument]');
+  applyInstrumentTheme(activeCard ? activeCard.dataset.instrument : 'guitar');
+})();
+</script>
+
+
+
+<script id="timeline-ultra-smooth-js">
+(function(){
+  const section = document.querySelector('.timeline-section');
+  const track = section && section.querySelector('.timeline-track');
+
+  if(!section || !track) return;
+
+  let played = false;
+
+  // Explicitly make vertical wheel/touch belong to the document, not the timeline.
+  // No preventDefault: the browser keeps its native smooth page scrolling.
+  track.addEventListener('wheel', function(e){
+    if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+      track.scrollLeft = 0;
+    }
+  }, {passive:true});
+
+  // One visual pass only when the section first becomes visible.
+  const observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(!entry.isIntersecting || played) return;
+
+      played = true;
+
+      // Wait a moment so the section settles naturally after the user's scroll.
+      setTimeout(function(){
+        track.classList.add('timeline-play');
+
+        setTimeout(function(){
+          track.classList.remove('timeline-play');
+          track.style.transform = 'translate3d(-22%,0,0)';
+        }, 2500);
+      }, 250);
+
+      observer.disconnect();
+    });
+  }, {
+    threshold:0.25
+  });
+
+  observer.observe(section);
+})();
+</script>
+
+
+
+<script id="timeline-one-time-visual-motion">
+(function(){
+  const section = document.querySelector('.timeline-section');
+  const track = section && section.querySelector('.timeline-track');
+
+  if (!section || !track) return;
+
+  let played = false;
+
+  function playOnce(){
+    if (played) return;
+    played = true;
+
+    const wrapper = section.querySelector('.timeline-wrapper');
+    if (!wrapper) return;
+
+    const overflow = Math.max(0, track.scrollWidth - wrapper.clientWidth);
+
+    if (overflow < 30) return;
+
+    const distance = Math.min(overflow * 0.55, 520);
+
+    track.animate(
+      [
+        { transform:'translate3d(0,0,0)' },
+        { transform:'translate3d(' + (-distance) + 'px,0,0)' }
+      ],
+      {
+        duration:2600,
+        easing:'cubic-bezier(.22,.61,.36,1)',
+        fill:'forwards'
+      }
+    );
+  }
+
+  const observer = new IntersectionObserver(function(entries){
+    if (entries.some(function(entry){
+      return entry.isIntersecting && entry.intersectionRatio >= .25;
+    })){
+      setTimeout(playOnce, 250);
+      observer.disconnect();
+    }
+  }, {threshold:[.25]});
+
+  observer.observe(section);
+})();
+</script>
+
+
+<script id="sound-image-visibility-guard">
+(function(){
+  function showSoundImage(){
+    document.querySelectorAll('.sound-real-image').forEach(function(img){
+      img.style.display='block';
+      img.style.visibility='visible';
+      img.style.opacity='1';
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', showSoundImage);
+  }else{
+    showSoundImage();
+  }
+  window.addEventListener('load', showSoundImage);
+})();
+</script>
+
+
+<script id="merged-final-image-guard">
+(function(){
+  function forceVisibleImages(){
+    document.querySelectorAll(
+      '.precision-real-image, .sound-real-image'
+    ).forEach(function(img){
+      img.style.display='block';
+      img.style.visibility='visible';
+      img.style.opacity='1';
+    });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', forceVisibleImages);
+  }else{
+    forceVisibleImages();
+  }
+
+  window.addEventListener('load', forceVisibleImages);
+
+  /* Re-assert after existing reveal/animation scripts run. */
+  setTimeout(forceVisibleImages, 300);
+  setTimeout(forceVisibleImages, 1200);
+})();
+</script>
+
+
+<script id="same-reference-footer-script">
+document.addEventListener("DOMContentLoaded",function(){
+  const top=document.querySelector(".reference-top");
+  if(top) top.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+});
+</script>
+
+</body>
+</html>

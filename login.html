@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome Back — Stackly Music</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{--gold:#d8a63c;--light-gold:#f2c45f;--cream:#f5f2ea;--dark:#050504}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;background:#050504;color:var(--cream)}
+body{overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-4;background:
+radial-gradient(circle at 18% 20%,rgba(216,166,60,.12),transparent 28%),
+radial-gradient(circle at 82% 70%,rgba(216,166,60,.09),transparent 30%),
+linear-gradient(135deg,#050504,#0c0904 52%,#050504)}
+body::after{content:"";position:fixed;inset:0;z-index:-3;opacity:.18;background-image:
+linear-gradient(rgba(216,166,60,.09) 1px,transparent 1px),
+linear-gradient(90deg,rgba(216,166,60,.09) 1px,transparent 1px);background-size:64px 64px}
+.login-page{min-height:100vh;display:flex;position:relative;overflow:hidden}
+.login-left,.login-right{position:relative;z-index:2}
+.login-left{flex:1;display:flex;flex-direction:column;justify-content:center;padding:4rem 5vw}
+.login-right{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 5vw}
+.brand{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:var(--cream);width:max-content}
+.login-left .brand{margin-bottom:3rem}
+.brand-logo{width:58px;height:58px;border:1.5px solid var(--gold);border-radius:50%;display:grid;place-items:center;overflow:hidden;box-shadow:0 0 25px rgba(216,166,60,.12)}
+.brand-logo img{width:78%;height:78%;object-fit:contain;filter:brightness(0)saturate(100%) invert(69%) sepia(53%) saturate(1020%) hue-rotate(359deg) brightness(97%) contrast(96%)}
+.brand-text h1{font:700 1.7rem/1 "Playfair Display",serif;letter-spacing:.08em;margin:0;color:var(--cream)}
+.brand-text span{display:block;color:var(--gold);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;margin-top:5px}
+.login-left h1{font:700 clamp(3rem,5vw,5.5rem)/.95 "Playfair Display",serif;margin:0 0 1rem}
+.login-left h1 span{background:linear-gradient(135deg,var(--gold),var(--light-gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.login-left p{color:rgba(245,242,234,.62);font-size:1.05rem;max-width:430px;line-height:1.75}
+.back-link{display:inline-flex;align-items:center;gap:.5rem;color:rgba(245,242,234,.55);text-decoration:none;font-size:.85rem;margin-top:2rem}
+.back-link:hover{color:var(--gold)}
+.login-card{width:100%;max-width:470px;padding:3rem;background:rgba(10,8,5,.78);backdrop-filter:blur(28px);border:1px solid rgba(216,166,60,.2);border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.35)}
+.login-card h2{font:700 2rem "Playfair Display",serif;margin:0 0 .5rem}
+.subtitle{color:rgba(245,242,234,.5);font-size:.9rem;margin:0 0 1.8rem}
+.login-form{display:flex;flex-direction:column;gap:1.05rem}
+.login-form input,.role-select{width:100%;padding:1rem 1.15rem;background:rgba(255,255,255,.035);border:1px solid rgba(216,166,60,.16);border-radius:12px;color:var(--cream);font:400 .95rem Inter,Arial;outline:none}
+.login-form input:focus,.role-select:focus{border-color:var(--gold);box-shadow:0 0 20px rgba(216,166,60,.1)}
+.login-form input::placeholder{color:rgba(245,242,234,.3)}
+.role-wrap{position:relative}
+.role-wrap::after{content:"⌄";position:absolute;right:17px;top:50%;transform:translateY(-50%);color:var(--gold);pointer-events:none}
+.role-select{appearance:none;cursor:pointer}
+.role-select option{background:#0b0905;color:var(--cream)}
+.role-label{display:block;color:var(--gold);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 .45rem}
+.login-options{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:rgba(245,242,234,.5)}
+.login-options label{display:flex;align-items:center;gap:.45rem}
+.login-options a{color:var(--gold);text-decoration:none}
+.main-btn,.register-btn{width:100%;padding:1rem;border:0;border-radius:12px;background:var(--gold);color:#080706;font:600 .92rem Inter,Arial;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:.3s}
+.main-btn:hover,.register-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(216,166,60,.28)}
+.divider{display:flex;align-items:center;gap:1rem;margin:.7rem 0;color:rgba(245,242,234,.3);font-size:.78rem}
+.divider:before,.divider:after{content:"";flex:1;height:1px;background:rgba(216,166,60,.1)}
+.google-btn{width:100%;padding:.9rem;background:rgba(255,255,255,.025);border:1px solid rgba(216,166,60,.15);border-radius:12px;color:var(--cream);display:flex;align-items:center;justify-content:center;gap:.75rem;cursor:pointer}
+.register-line{text-align:center;color:rgba(245,242,234,.48);font-size:.84rem;margin:1.3rem 0 0}
+.register-line a{color:var(--gold);text-decoration:none;font-weight:600}
+.music-svg{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.music-svg .staff{fill:none;stroke:rgba(216,166,60,.16);stroke-width:1;stroke-dasharray:8 14;animation:staff 18s linear infinite}
+.music-svg .wave{fill:none;stroke:rgba(242,196,95,.3);stroke-width:1.5;stroke-dasharray:3 10;animation:wave 10s linear infinite}
+.music-svg .note{fill:rgba(242,196,95,.68);filter:drop-shadow(0 0 10px rgba(216,166,60,.25));animation:note 6s ease-in-out infinite}
+.music-svg .note:nth-of-type(2){animation-delay:-2s}.music-svg .note:nth-of-type(3){animation-delay:-4s}.music-svg .note:nth-of-type(4){animation-delay:-1s}
+@keyframes staff{to{stroke-dashoffset:-220}}@keyframes wave{to{stroke-dashoffset:-260}}@keyframes note{0%,100%{transform:translateY(8px);opacity:.35}50%{transform:translateY(-16px);opacity:.9}}
+@media(max-width:900px){
+.login-page{flex-direction:column}.login-left{padding:2.2rem 1.4rem 1rem;text-align:center}.login-left .brand{margin:0 auto 2rem}.login-left p{margin:0 auto}.login-right{padding:1rem 1.1rem 2.2rem}.login-card{padding:1.6rem;border-radius:18px}.login-left h1{font-size:3rem}
+}
+</style>
+
+</head>
+<body>
+
+<div class="music-svg" aria-hidden="true">
+<svg viewBox="0 0 1440 900" preserveAspectRatio="none" width="100%" height="100%">
+<g class="staff">
+<path d="M-40 180 C250 145 430 230 720 190 S1180 130 1480 190"/>
+<path d="M-40 193 C250 158 430 243 720 203 S1180 143 1480 203"/>
+<path d="M-40 206 C250 171 430 256 720 216 S1180 156 1480 216"/>
+<path d="M-40 219 C250 184 430 269 720 229 S1180 169 1480 229"/>
+<path d="M-40 232 C250 197 430 282 720 242 S1180 182 1480 242"/>
+</g>
+<path class="wave" d="M-30 700 C120 640 170 760 310 700 S500 640 650 700 S840 760 990 700 S1180 640 1330 700 S1450 730 1490 700"/>
+<text x="9%" y="28%" class="note" font-size="68">♪</text>
+<text x="86%" y="32%" class="note" font-size="76">♫</text>
+<text x="22%" y="76%" class="note" font-size="52">♬</text>
+<text x="78%" y="80%" class="note" font-size="58">♪</text>
+</svg>
+</div>
+
+<div class="login-page">
+  <div class="login-left">
+    <a href="index.html" class="brand">
+      <div class="brand-logo"><img src="assets/logo.webp" alt="Stackly Music"></div>
+      <div class="brand-text"><h1>STACKLY</h1><span>Feel The Music</span></div>
+    </a>
+    <h1>Welcome<br><span>Back</span></h1>
+    <p>Continue your musical journey. Access your orders, saved instruments, and exclusive member content.</p>
+    <a href="index.html" class="back-link">← Back to Home</a>
+  </div>
+  <div class="login-right">
+    <div class="login-card">
+      <h2>Sign In</h2>
+      <p class="subtitle">Enter your credentials and choose how you want to continue.</p>
+      <form class="login-form" id="loginForm">
+        <input type="email" id="email" placeholder="Email address" required>
+        <input type="password" id="password" placeholder="Password" minlength="6" required>
+
+        <div>
+          <label class="role-label" for="dashboard">Continue as</label>
+          <div class="role-wrap">
+            <select class="role-select" id="dashboard" required>
+              <option value="">Select Dashboard</option>
+              <option value="player-dashboard.html">Player Dashboard</option>
+              <option value="listener-dashboard.html">Listener Dashboard</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="login-options">
+          <label><input type="checkbox" style="width:auto;padding:0"> Remember me</label>
+          <a href="404.html">Forgot password?</a>
+        </div>
+
+        <button class="main-btn" type="submit">Login →</button>
+
+        <div class="divider">or continue with</div>
+        <button type="button" class="google-btn">
+          <span style="font-weight:700">G</span> Continue with Google
+        </button>
+
+        <p class="register-line">Don't have an account? <a href="register-musica-premium.html">Create an account</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+document.getElementById('loginForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const dashboard=document.getElementById('dashboard').value;
+  if(!dashboard){alert('Please choose Player Dashboard or Listener Dashboard.');return;}
+  localStorage.setItem('stacklyUserEmail', document.getElementById('email').value.trim());
+localStorage.setItem('stacklyUserName', document.getElementById('email').value.trim().split('@')[0]);
+window.location.href=dashboard;
+});
+</script>
+
+<script id="exact-login-identity">
+document.addEventListener("DOMContentLoaded", function(){
+  const form = document.getElementById("loginForm");
+  if(!form) return;
+  form.addEventListener("submit", function(){
+    const email = document.getElementById("email");
+    if(email && email.value.trim()){
+      const exactEmail = email.value.trim();
+      localStorage.setItem("stacklyUserEmail", exactEmail);
+      localStorage.setItem("stacklyUserName", exactEmail.split("@")[0]);
+    }
+  }, true);
+});
+</script>
+
+</body>
+</html>
